@@ -1,0 +1,12 @@
+node_modules/
+bun.lockb
+package-lock.json
+next.config.ts
+postcss.config.mjs
+tailwind.config.ts
+commitlint.config.js
+dist/
+public/
+.next/
+.vercel
+.husky

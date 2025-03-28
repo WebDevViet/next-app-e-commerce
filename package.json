@@ -1,0 +1,52 @@
+{
+  "name": "e-commerce",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint-fix": "next lint --fix",
+    "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
+    "prettier-fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
+    "check-format": "bun lint && bun prettier",
+    "fix-format": "bun lint-fix && bun prettier-fix",
+    "prepare": "husky",
+    "commitlint": "commitlint --edit"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "bun fix-format",
+      "git add ."
+    ]
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.484.0",
+    "next": "15.1.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.7",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
