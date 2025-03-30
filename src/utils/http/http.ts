@@ -1,7 +1,4 @@
-interface DataResponse<T> {
-  status: number
-  payload: T
-}
+import { type ResponseHttp } from '@/types/response/response'
 
 interface Interceptors {
   request: ((options: RequestInit) => RequestInit)[]
@@ -45,7 +42,7 @@ class Http {
     this.interceptors.error.push(interceptor)
   }
 
-  async sendRequest<T>(url: string, options: RequestInit): Promise<DataResponse<T>> {
+  async sendRequest<Data>(url: string, options: RequestInit): Promise<ResponseHttp<Data>> {
     options = { ...this.requestBase, ...options }
 
     for (const requestInterceptor of this.interceptors.request) {
@@ -67,7 +64,7 @@ class Http {
     }
 
     return {
-      status: response.status,
+      statuscode: response.status,
       payload: await response.json()
     }
   }
@@ -76,25 +73,25 @@ class Http {
     return this.sendRequest(config.url, config)
   }
 
-  async request<T>(method: string, url: string, body?: any, options?: RequestInit): Promise<DataResponse<T>> {
+  async request<Data>(method: string, url: string, body?: any, options?: RequestInit): Promise<ResponseHttp<Data>> {
     const config: RequestInit = { ...options, method, body: body ? JSON.stringify(body) : undefined }
-    return this.sendRequest<T>(url, config)
+    return this.sendRequest<Data>(url, config)
   }
 
-  async get<T>(url: string, options?: RequestInit): Promise<DataResponse<T>> {
-    return this.request<T>('GET', url, undefined, options)
+  async get<Data>(url: string, options?: RequestInit): Promise<ResponseHttp<Data>> {
+    return this.request<Data>('GET', url, undefined, options)
   }
 
-  async post<T>(url: string, body: any, options?: RequestInit): Promise<DataResponse<T>> {
-    return this.request<T>('POST', url, body, options)
+  async post<Data>(url: string, body: any, options?: RequestInit): Promise<ResponseHttp<Data>> {
+    return this.request<Data>('POST', url, body, options)
   }
 
-  async put<T>(url: string, body: any, options?: RequestInit): Promise<DataResponse<T>> {
-    return this.request<T>('PUT', url, body, options)
+  async put<Data>(url: string, body: any, options?: RequestInit): Promise<ResponseHttp<Data>> {
+    return this.request<Data>('PUT', url, body, options)
   }
 
-  async delete<T>(url: string, options?: RequestInit): Promise<DataResponse<T>> {
-    return this.request<T>('DELETE', url, undefined, options)
+  async delete<Data>(url: string, options?: RequestInit): Promise<ResponseHttp<Data>> {
+    return this.request<Data>('DELETE', url, undefined, options)
   }
 }
 

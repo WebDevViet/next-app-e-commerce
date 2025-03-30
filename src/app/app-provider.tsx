@@ -1,8 +1,9 @@
 'use client'
-import { AccountResType } from '@/schemas/schemaValidations/account.schema'
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
-type User = AccountResType['data']
+import { TResLogin } from '@/types/response/authenResponse'
+
+type User = TResLogin['user']
 
 const AppContext = createContext<{
   user: User | null
@@ -19,9 +20,7 @@ export const useAppContext = () => {
 }
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUserState] = useState<User | null>(() => {
-    return null
-  })
+  const [user, setUserState] = useState<User | null>(null)
   const isAuthenticated = Boolean(user)
 
   const setUser = useCallback(

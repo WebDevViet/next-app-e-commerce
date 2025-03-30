@@ -250,17 +250,17 @@ Theo chuẩn Angular, 1 commit message sẽ theo cấu trúc như sau: **`type(s
 
 - `type` ở trên có thể là:
 
-  - `build`: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-  - `ci`: Changes to our CI configuration files and scripts (example scopes: Gitlab CI, Circle, BrowserStack, SauceLabs)
-  - `chore`: add something without touching production code (Eg: update npm dependencies)
-  - `docs`: Documentation only changes
-  - `feat`: A new feature
-  - `fix`: A bug fix
-  - `perf`: A code change that improves performance
-  - `refactor`: A code change that neither fixes a bug nor adds a feature
-  - `revert`: Reverts a previous commit
-  - `style`: Changes that do not affect the meaning of the code (Eg: adding white-space, formatting, missing semi-colons, etc)
-  - `test`: Adding missing tests or correcting existing tests
+  - `build`: Thay đổi hệ thống xây dựng hoặc phụ thuộc bên ngoài
+  - `ci`: Thay đổi cấu hình và kịch bản CI
+  - `chore`: Thêm hoặc cập nhật thứ gì đó mà không ảnh hưởng đến mã sản xuất
+  - `docs`: Thay đổi chỉ liên quan đến tài liệu
+  - `feat`: Thêm tính năng mới
+  - `fix`: Sửa lỗi
+  - `perf`: Cải thiện hiệu suất
+  - `refactor`: Thay đổi mã mà không sửa lỗi hoặc thêm tính năng
+  - `revert`: Hoàn tác commit trước đó
+  - `style`: Thay đổi không ảnh hưởng đến ý nghĩa của mã (ví dụ: định dạng, thêm khoảng trắng, etc.)
+  - `test`: Thêm hoặc sửa các bài kiểm tra
 
 - `scope` thì là optional, và nếu có thì nó nên là tên của package mà commit hiện tại làm ảnh hưởng. Mình thấy scope thường dùng ở các repository mà chứa nhiều packages dạng monorepo, ví dụ repo của Vue 3, scope sẽ là tên của 1 package nào đó ở folder packages
 
