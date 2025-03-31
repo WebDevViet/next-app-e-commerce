@@ -26,7 +26,7 @@ import { Input } from '@/components/ui/input'
 // * Utils
 import { cn } from '@/lib/utils'
 
-export function RegisterForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function FormRegister({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const form = useForm<BodyRegister>({
     resolver: zodResolver(BodyRegisterSchema),
     defaultValues: {

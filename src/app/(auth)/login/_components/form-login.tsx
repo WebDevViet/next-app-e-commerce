@@ -24,8 +24,13 @@ import { Input } from '@/components/ui/input'
 
 // * Utils
 import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { useAppContext } from '@/app/app-provider'
 
-export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+  const router = useRouter()
+  const { setUser } = useAppContext()
+
   const form = useForm<BodyLogin>({
     resolver: zodResolver(BodyLoginSchema),
     defaultValues: {
@@ -41,6 +46,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       } = await authService.login(values)
       // eslint-disable-next-line no-console
       console.log('🚀 ~ onSubmit ~ user:', data.user)
+      setUser(data.user)
+      router.back()
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('🚀 ~ onSubmit ~ error:', error)

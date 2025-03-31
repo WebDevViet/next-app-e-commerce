@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 // * Components
 import AppProvider from '@/app/app-provider'
 import { ThemeProvider } from '@/components/theme-provider'
-import { Navbar } from '@/components/layout/navbar'
+import { Navbar } from '@/components/navbar/navbar'
 
 // * Metadata
 export const metadata: Metadata = {

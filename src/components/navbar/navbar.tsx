@@ -1,5 +1,5 @@
 // * Next
-import Image from 'next/image'
+import Link from 'next/link'
 
 // * Shadcn
 import { Book, Menu, Sunset, Trees, Zap } from 'lucide-react'
@@ -15,10 +15,11 @@ import {
   NavigationMenuTrigger
 } from '@/components/ui/navigation-menu'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import Link from 'next/link'
 
 // * Components
 import { ModeToggle } from '@/components/mode-toggle'
+import Logo from '@/components/navbar/components/logo'
+import ButtonAuth from '@/components/navbar/components/button-auth'
 
 interface MenuItem {
   title: string
@@ -28,7 +29,7 @@ interface MenuItem {
   items?: MenuItem[]
 }
 
-interface Navbar1Props {
+interface Props {
   logo?: {
     url: string
     src: string
@@ -49,14 +50,8 @@ interface Navbar1Props {
 }
 
 const Navbar = ({
-  logo = {
-    url: '/',
-    src: '/vercel.svg',
-    alt: 'logo',
-    title: 'Vercel'
-  },
   menu = [
-    { title: 'Home', url: '#' },
+    { title: 'Home', url: '/' },
     {
       title: 'Products',
       url: '#',
@@ -125,33 +120,15 @@ const Navbar = ({
       title: 'Blog',
       url: '#'
     }
-  ],
-  auth = {
-    login: { title: 'Login', url: '/login' },
-    register: { title: 'Register', url: '/register' }
-  }
-}: Navbar1Props) => {
-  const imgLogo = (
-    <Link href={logo.url} className='flex items-center gap-2'>
-      <Image width={32} height={32} src={logo.src} className='max-h-8 dark:filter-none filter invert' alt={logo.alt} />
-      <span className='text-lg font-semibold tracking-tighter'>{logo.title}</span>
-    </Link>
-  )
-
-  const imgLogoNoTitle = (
-    <Link href={logo.url} className='flex items-center gap-2'>
-      <Image width={32} height={32} src={logo.src} className='max-h-8 dark:filter-none filter invert' alt={logo.alt} />
-    </Link>
-  )
-
+  ]
+}: Props) => {
   return (
     <section className='py-4 px-6 border-b flex items-center justify-center sticky top-0 z-[50] bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
       <div className='container'>
         {/* Desktop Menu */}
         <nav className='hidden justify-between lg:flex'>
           <div className='flex items-center min-w-48'>
-            {/* Logo */}
-            {imgLogo}
+            <Logo />
           </div>
 
           {/* Menu */}
@@ -162,22 +139,16 @@ const Navbar = ({
           </div>
 
           {/* Actions */}
-          <div className='flex gap-2 min-w-48 justify-end'>
+          <div className='flex gap-2 min-w-48 justify-end items-center'>
             <ModeToggle />
-            <Button asChild variant='outline' size='sm'>
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size='sm'>
-              <Link href={auth.register.url}>{auth.register.title}</Link>
-            </Button>
+            <ButtonAuth btnProps={{ size: 'sm' }} />
           </div>
         </nav>
 
         {/* Mobile Menu */}
         <div className='block lg:hidden'>
           <div className='flex items-center justify-between'>
-            {/* Logo */}
-            {imgLogo}
+            <Logo />
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant='outline' size='icon'>
@@ -186,7 +157,9 @@ const Navbar = ({
               </SheetTrigger>
               <SheetContent className='overflow-y-auto'>
                 <SheetHeader>
-                  <SheetTitle>{imgLogoNoTitle}</SheetTitle>
+                  <SheetTitle className='px-4'>
+                    <Logo hasTitle={false} />
+                  </SheetTitle>
                 </SheetHeader>
                 <div className='flex flex-col gap-6 p-4'>
                   <Accordion type='single' collapsible className='flex w-full flex-col gap-4'>
@@ -194,12 +167,7 @@ const Navbar = ({
                   </Accordion>
 
                   <div className='flex flex-col gap-3'>
-                    <Button asChild variant='outline'>
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.register.url}>{auth.register.title}</Link>
-                    </Button>
+                    <ButtonAuth />
                   </div>
                 </div>
               </SheetContent>
