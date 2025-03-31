@@ -74,7 +74,7 @@ const InputPassword = ({ form, propsInput, showFormMessage, customLabel }: Props
         <FormItem className='grid gap-1'>
           {customLabel ?? (
             <FormLabel>
-              Password <span className='text-destructive'>*</span>
+              Password <span className='text-red-600'>*</span>
             </FormLabel>
           )}
 

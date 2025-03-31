@@ -94,7 +94,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                     render={({ field }) => (
                       <FormItem className='grid gap-2'>
                         <FormLabel>
-                          Email <span className='text-destructive'>*</span>
+                          Email <span className='text-red-600'>*</span>
                         </FormLabel>
                         <FormControl>
                           <Input type='email' required placeholder='m@example.com' autoComplete='email' {...field} />
@@ -109,7 +109,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                     customLabel={
                       <div className='flex items-center'>
                         <FormLabel>
-                          Password <span className='text-destructive'>*</span>
+                          Password <span className='text-red-600'>*</span>
                         </FormLabel>
                         <a href='#' className='ml-auto inline-block text-sm underline-offset-4 hover:underline'>
                           Forgot your password?

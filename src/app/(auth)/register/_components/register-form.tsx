@@ -36,9 +36,16 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
   })
 
   async function onSubmit(values: BodyRegister) {
-    const result = await authService.register(values)
-    // eslint-disable-next-line no-console
-    console.log('🚀 ~ onSubmit ~ result:', result)
+    try {
+      const {
+        payload: { data }
+      } = await authService.register(values)
+      // eslint-disable-next-line no-console
+      console.log('🚀 ~ onSubmit ~ data:', data)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('🚀 ~ onSubmit ~ error:', error)
+    }
   }
 
   function onInvalid(data: unknown) {
@@ -62,7 +69,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
                   render={({ field }) => (
                     <FormItem className='grid gap-1'>
                       <FormLabel>
-                        Email <span className='text-destructive'>*</span>
+                        Email <span className='text-red-600'>*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type='email' required placeholder='m@example.com' autoComplete='email' {...field} />

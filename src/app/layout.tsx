@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 // * Components
 import AppProvider from '@/app/app-provider'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Navbar } from '@/components/layout/navbar'
 
 // * Metadata
 export const metadata: Metadata = {
@@ -34,7 +35,10 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          <AppProvider>{children}</AppProvider>
+          <AppProvider>
+            <Navbar />
+            {children}
+          </AppProvider>
         </ThemeProvider>
       </body>
     </html>
