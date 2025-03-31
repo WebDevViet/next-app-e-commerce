@@ -19,9 +19,9 @@ export const BodyLoginSchema = z.object({
     .regex(PASSWORD_REGEX, { message: messPassword })
 })
 
-export type TBodyLogin = z.infer<typeof BodyLoginSchema>
+export type BodyLogin = z.infer<typeof BodyLoginSchema>
 
 // * Schema Register
 export const BodyRegisterSchema = BodyLoginSchema
 
-export type TBodyRegister = z.infer<typeof BodyRegisterSchema>
+export type BodyRegister = z.infer<typeof BodyRegisterSchema>

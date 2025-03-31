@@ -1,29 +1,32 @@
 'use client'
 
-// * Utils
-import { cn } from '@/lib/utils'
-
-// * Services Api
-import authService from '@/services/auth'
-
-// * Components
-import InputPassword from '@/components/input-password'
-
-// * Shadn
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-
-// * Schema
-import { BodyLoginSchema, TBodyLogin } from '@/schemas/schemaValidations/authenSchema'
+// * Next
+import Link from 'next/link'
 
 // * Libraries
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
+// * Services Api
+import authService from '@/services/auth'
+
+// * Schema
+import { BodyLoginSchema, type BodyLogin } from '@/schemas/schemaValidations/authenSchema'
+
+// * Components
+import InputPassword from '@/components/input-password'
+
+// * Shadcn
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
+// * Utils
+import { cn } from '@/lib/utils'
+
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const form = useForm<TBodyLogin>({
+  const form = useForm<BodyLogin>({
     resolver: zodResolver(BodyLoginSchema),
     defaultValues: {
       email: '',
@@ -31,10 +34,17 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     }
   })
 
-  async function onSubmit(values: TBodyLogin) {
-    const result = await authService.login(values)
-    // eslint-disable-next-line no-console
-    console.log('🚀 ~ onSubmit ~ result:', result)
+  async function onSubmit(values: BodyLogin) {
+    try {
+      const {
+        payload: { data }
+      } = await authService.login(values)
+      // eslint-disable-next-line no-console
+      console.log('🚀 ~ onSubmit ~ user:', data.user)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('🚀 ~ onSubmit ~ error:', error)
+    }
   }
 
   function onInvalid(data: unknown) {
@@ -117,9 +127,9 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
             <div className='mt-4 text-center text-sm'>
               Don&apos;t have an account?{' '}
-              <a href='#' className='underline underline-offset-4'>
-                Sign up
-              </a>
+              <Link href='/register' className='underline underline-offset-4'>
+                Register
+              </Link>
             </div>
           </div>
         </CardContent>

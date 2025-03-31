@@ -1,17 +1,16 @@
+// * Http
+import clientToServer from '@/utils/http/clientToServer'
+
 // * Config
 import { CONFIG_API } from '@/configs/api'
 
-// * Schema
-import { TBodyLogin } from '@/schemas/schemaValidations/authenSchema'
-
 // * Types
-import { TResLogin } from '@/types/response/authenResponse'
-
-// * Utils
-import clientToServer from '@/utils/http/clientToServer'
+import type { BodyLogin, BodyRegister } from '@/schemas/schemaValidations/authenSchema'
+import type { ResponseLogin, ResponseRegister } from '@/types/response/authenResponse'
 
 const authService = {
-  login: (body: TBodyLogin) => clientToServer.post<TResLogin>(CONFIG_API.AUTH.LOGIN, body)
+  login: (body: BodyLogin) => clientToServer.post<ResponseLogin>(CONFIG_API.AUTH.LOGIN, body),
+  register: (body: BodyRegister) => clientToServer.post<ResponseRegister>(CONFIG_API.AUTH.REGISTER, body)
 }
 
 export default authService

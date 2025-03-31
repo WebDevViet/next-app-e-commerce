@@ -1,11 +1,11 @@
-export interface ResponseHttp<Data> {
+export interface ResponseHttp<T> {
   statuscode: number
-  payload: ResponseServer<Data>
+  payload: PayloadResponse<T>
 }
 
-export type ResponseServer<Data> = {
+interface PayloadResponse<T> {
   typeError: string
-  data: Data
+  data: T
   message: string
   status: string
 }

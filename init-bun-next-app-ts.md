@@ -266,6 +266,6 @@ Theo chuẩn Angular, 1 commit message sẽ theo cấu trúc như sau: **`type(s
 
 - `subject` là nội dung của commit
 
-## Shadn UI
+## Shadcn UI
 
 [Install and configure shadcn/ui for Next.js](https://ui.shadcn.com/docs/installation/next)

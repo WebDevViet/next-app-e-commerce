@@ -1,9 +1,12 @@
 'use client'
+
+// * React
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
-import { TResLogin } from '@/types/response/authenResponse'
+// * Types
+import { type ResponseLogin } from '@/types/response/authenResponse'
 
-type User = TResLogin['user']
+type User = ResponseLogin['user']
 
 const AppContext = createContext<{
   user: User | null

@@ -7,8 +7,8 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 // * Type
+import { type BodyRegister } from '@/schemas/schemaValidations/authenSchema'
 import { type UseFormReturn } from 'react-hook-form'
-import { type TBodyRegister } from '@/schemas/schemaValidations/authenSchema'
 
 // * Components
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -23,13 +23,13 @@ import { handleCapsLock } from '@/utils/input/inputUtils'
 // * REGEX
 import { VN_CHAR_REGEX } from '@/constants/regex'
 
-type TProps = {
-  form: UseFormReturn<TBodyRegister>
+type Props = {
+  form: UseFormReturn<BodyRegister>
   propsInput?: React.ComponentProps<typeof Input>
-  serverErrorOnly?: boolean
+  showFormMessage?: 'server' | false
   customLabel?: React.ReactNode
 }
-const InputPassword = ({ form, propsInput, serverErrorOnly = false, customLabel }: TProps) => {
+const InputPassword = ({ form, propsInput, showFormMessage, customLabel }: Props) => {
   const [showPass, setShowPass] = useState(false)
 
   const password = form.watch('password', '')
@@ -57,6 +57,12 @@ const InputPassword = ({ form, propsInput, serverErrorOnly = false, customLabel 
     }
   }, [password])
 
+  let formMessage: React.ReactNode
+
+  if (showFormMessage !== false) {
+    formMessage = showFormMessage === 'server' ? hasServerError && <FormMessage /> : <FormMessage />
+  }
+
   return (
     <FormField
       control={form.control}
@@ -65,7 +71,7 @@ const InputPassword = ({ form, propsInput, serverErrorOnly = false, customLabel 
         field
         /**fieldState */
       }) => (
-        <FormItem className='grid gap-2'>
+        <FormItem className='grid gap-1'>
           {customLabel ?? (
             <FormLabel>
               Password <span className='text-destructive'>*</span>
@@ -99,7 +105,7 @@ const InputPassword = ({ form, propsInput, serverErrorOnly = false, customLabel 
               )}
             </button>
           </div>
-          {serverErrorOnly ? hasServerError && <FormMessage /> : <FormMessage />}
+          {formMessage}
           {/* {fieldState.error && fieldState.error.type === 'server' && <FormMessage />} */}
         </FormItem>
       )}
