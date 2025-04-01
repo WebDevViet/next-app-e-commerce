@@ -6,6 +6,9 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 // * Types
 import { type ResponseLogin } from '@/types/response/authenResponse'
 
+// * Actions
+import { actionLogout } from '@/server/actions/actionLogout'
+
 type User = ResponseLogin['user']
 
 const AppContext = createContext<{
@@ -27,9 +30,13 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   const isAuthenticated = Boolean(user)
 
   const setUser = useCallback(
-    (user: User | null) => {
+    async (user: User | null) => {
       setUserState(user)
       localStorage.setItem('user', JSON.stringify(user))
+      if (user === null) {
+        localStorage.removeItem('user')
+        await actionLogout()
+      }
     },
     [setUserState]
   )

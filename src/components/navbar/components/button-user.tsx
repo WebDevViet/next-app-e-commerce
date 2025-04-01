@@ -19,10 +19,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+
+// * Components
 import { LogOut } from 'lucide-react'
 
 const ButtonUser = () => {
-  const { user } = useAppContext()
+  const { user, setUser } = useAppContext()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -84,7 +86,7 @@ const ButtonUser = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setUser(null)}>
           <LogOut />
           Log out
         </DropdownMenuItem>

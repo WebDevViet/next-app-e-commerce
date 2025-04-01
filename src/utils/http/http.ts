@@ -34,11 +34,11 @@ class Http {
     this.interceptors.request.push(interceptor)
   }
 
-  responseInterceptor(interceptor: (data: any) => any) {
+  responseInterceptor(interceptor: (response: Response) => any) {
     this.interceptors.response.push(interceptor)
   }
 
-  errorInterceptor(interceptor: (err: any) => void) {
+  errorInterceptor(interceptor: (response: Response) => any) {
     this.interceptors.error.push(interceptor)
   }
 

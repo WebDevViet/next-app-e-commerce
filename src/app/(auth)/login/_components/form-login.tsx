@@ -24,11 +24,15 @@ import { Input } from '@/components/ui/input'
 
 // * Utils
 import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useAppContext } from '@/app/app-provider'
+
+// * Paths
+import { authPaths } from '@/middleware'
 
 export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const router = useRouter()
+  const pathname = usePathname()
   const { setUser } = useAppContext()
 
   const form = useForm<BodyLogin>({
@@ -47,7 +51,12 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
       // eslint-disable-next-line no-console
       console.log('🚀 ~ onSubmit ~ user:', data.user)
       setUser(data.user)
-      router.back()
+
+      if (authPaths.some((path) => pathname.startsWith(path))) {
+        router.push('/')
+      } else {
+        router.back()
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('🚀 ~ onSubmit ~ error:', error)

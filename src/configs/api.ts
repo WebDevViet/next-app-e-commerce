@@ -1,6 +1,7 @@
 export const CONFIG_API = {
   AUTH: {
     LOGIN: `auth/login`,
-    REGISTER: `auth/register`
+    REGISTER: `auth/register`,
+    LOGOUT: `auth/logout`
   }
 }

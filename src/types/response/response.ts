@@ -9,3 +9,10 @@ interface PayloadResponse<T> {
   message: string
   status: string
 }
+
+export interface ErrorResponse {
+  status: 'Error'
+  message: 'Unauthorized'
+  typeError: 'UNAUTHORIZED'
+  data: null
+}
