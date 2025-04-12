@@ -17,7 +17,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 // * Components
-import { ModeToggle } from '@/components/mode-toggle'
+import { ModeToggle } from '@/components/buttons/mode-toggle'
 import Logo from '@/components/navbar/components/logo'
 import ButtonAuth from '@/components/navbar/components/button-auth'
 

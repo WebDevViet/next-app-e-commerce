@@ -1,18 +1,31 @@
+import { TypeError } from '@/enums/typeError'
+
 export interface ResponseHttp<T> {
-  statuscode: number
-  payload: PayloadResponse<T>
+  status: number
+  payload: T
+  response: Response
 }
 
-interface PayloadResponse<T> {
-  typeError: string
+export type PayloadSuccess<T = null> = {
   data: T
   message: string
-  status: string
+  errors: null
+  typeError: null
 }
 
-export interface ErrorResponse {
-  status: 'Error'
-  message: 'Unauthorized'
-  typeError: 'UNAUTHORIZED'
+export type PayloadError = {
   data: null
+  message: string
+  errors: null
+  typeError: TypeError
 }
+
+export type PayloadErrors = {
+  data: null
+  message: string
+  errors: Record<string, string>
+  typeError: TypeError
+}
+
+export type ResponseSuccess<T = null> = ResponseHttp<PayloadSuccess<T>>
+export type ResponseError = ResponseHttp<PayloadError | PayloadErrors>

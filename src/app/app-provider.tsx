@@ -1,24 +1,39 @@
 'use client'
 
-// * React
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
-
-// * Types
-import { type ResponseLogin } from '@/types/response/authenResponse'
+// * Next React
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 
 // * Actions
 import { actionLogout } from '@/server/actions/actionLogout'
 
-type User = ResponseLogin['user']
+// * Paths
+import clientUserServices from '@/services/client/user'
+
+// * Types
+import { GetMeResponse } from '@/types/response/userResponse'
+import { authPaths } from '@/constants/path'
+
+// * Shadcn
+import { Toaster } from '@/components/ui/sonner'
+import handleErrorClient from '@/helpers/error/handleErrorClient'
 
 const AppContext = createContext<{
-  user: User | null
-  setUser: (user: User | null) => void
+  user: GetMeResponse | null
+  setUser: (user: GetMeResponse | null) => void
   isAuthenticated: boolean
+  handleLogin: () => Promise<void>
+  handleLogout: () => Promise<void>
+  messageError: string | null
+  setMessageError: Dispatch<SetStateAction<string | null>>
 }>({
   user: null,
   setUser: () => {},
-  isAuthenticated: false
+  isAuthenticated: false,
+  handleLogin: async () => {},
+  handleLogout: async () => {},
+  messageError: null,
+  setMessageError: () => {}
 })
 export const useAppContext = () => {
   const context = useContext(AppContext)
@@ -26,35 +41,76 @@ export const useAppContext = () => {
 }
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUserState] = useState<User | null>(null)
-  const isAuthenticated = Boolean(user)
+  const router = useRouter()
+  const pathname = usePathname()
 
-  const setUser = useCallback(
-    async (user: User | null) => {
-      setUserState(user)
-      localStorage.setItem('user', JSON.stringify(user))
-      if (user === null) {
-        localStorage.removeItem('user')
-        await actionLogout()
-      }
-    },
-    [setUserState]
-  )
+  const [user, setUser] = useState<GetMeResponse | null>(null)
+  const [messageError, setMessageError] = useState<string | null>(null)
+
+  const isAuthenticated = Boolean(user)
+  const handleLogin = async () => {
+    const {
+      payload: { data }
+    } = await clientUserServices.getMe()
+
+    setUser(data)
+
+    if (authPaths.some((path) => pathname.startsWith(path))) {
+      router.push('/')
+    } else {
+      router.back()
+    }
+  }
+
+  const handleLogout = async () => {
+    setUser(null)
+    await actionLogout()
+  }
+
+  const mounted = useRef(false)
 
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    setUserState(user && JSON.parse(user))
-  }, [setUserState])
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+
+    if (!user) localStorage.removeItem('user')
+
+    localStorage.setItem('user', JSON.stringify(user))
+  }, [user])
+
+  useEffect(() => {
+    const userStore = localStorage.getItem('user')
+
+    if (!userStore || userStore === 'null') return setUser(null)
+    ;(async function () {
+      try {
+        const {
+          payload: { data }
+        } = await clientUserServices.getMe()
+        setUser(data)
+      } catch (error) {
+        setUser(null)
+        handleErrorClient({ error })
+      }
+    })()
+  }, [])
 
   return (
     <AppContext.Provider
       value={{
-        user,
-        setUser,
-        isAuthenticated
+        user: user,
+        setUser: setUser,
+        isAuthenticated,
+        handleLogin,
+        handleLogout,
+        messageError,
+        setMessageError
       }}
     >
       {children}
+      <Toaster />
     </AppContext.Provider>
   )
 }

@@ -24,17 +24,18 @@ import {
 import { LogOut } from 'lucide-react'
 
 const ButtonUser = () => {
-  const { user, setUser } = useAppContext()
+  const { user: user, handleLogout } = useAppContext()
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar>
-          <AvatarImage src='https://github.com/shadcn.png' />
+      <DropdownMenuTrigger asChild>
+        <Avatar className='cursor-pointer'>
+          <AvatarImage src='https://github.com/shadcn.png' alt='avatar' />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
-        <DropdownMenuLabel>{user?.email || 'My Account'}</DropdownMenuLabel>
+        <DropdownMenuLabel>{user?.username || 'My Account'}</DropdownMenuLabel>
 
         <DropdownMenuSeparator />
 
@@ -86,7 +87,7 @@ const ButtonUser = () => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={() => setUser(null)}>
+        <DropdownMenuItem onClick={async () => await handleLogout()}>
           <LogOut />
           Log out
         </DropdownMenuItem>

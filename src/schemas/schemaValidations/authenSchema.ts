@@ -7,7 +7,7 @@ import { PASSWORD_REGEX } from '@/constants/regex'
 // * Messages
 const messEmail = 'The field must a email'
 const messPassword =
-  'The password must be at least 6 characters long and include uppercase letters, lowercase letters, numbers, and special characters'
+  'The password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and special characters'
 
 // * Schema login
 export const BodyLoginSchema = z.object({
@@ -15,7 +15,7 @@ export const BodyLoginSchema = z.object({
   password: z
     .string()
     .nonempty({ message: 'Please enter your password' })
-    .min(6, { message: messPassword })
+    .min(8, { message: messPassword })
     .regex(PASSWORD_REGEX, { message: messPassword })
 })
 

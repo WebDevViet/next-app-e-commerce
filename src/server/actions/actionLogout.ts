@@ -5,16 +5,18 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 // * Services
-import authService from '@/services/auth'
+import nextAuthServices from '@/services/next/auth'
 
 export async function actionLogout() {
   const cookieStore = await cookies()
 
   try {
-    await authService.logout()
+    const result = await nextAuthServices.logout()
+    return result
   } catch {
   } finally {
-    cookieStore.delete('refresh_token')
+    cookieStore.delete('Authorization')
+    cookieStore.delete('refresh-token')
     redirect('/login')
   }
 }

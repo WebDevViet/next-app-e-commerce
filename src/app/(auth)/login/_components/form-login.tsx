@@ -1,6 +1,7 @@
 'use client'
 
-// * Next
+// * Next React
+import { useAppContext } from '@/app/app-provider'
 import Link from 'next/link'
 
 // * Libraries
@@ -8,12 +9,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 // * Services Api
-import authService from '@/services/auth'
+import clientAuthServices from '@/services/client/auth'
 
 // * Schema
 import { BodyLoginSchema, type BodyLogin } from '@/schemas/schemaValidations/authenSchema'
 
 // * Components
+import ButtonSubmitting from '@/components/buttons/button-submitting'
 import InputPassword from '@/components/input-password'
 
 // * Shadcn
@@ -21,20 +23,16 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
 
 // * Utils
+import { AlertDestructive } from '@/components/alert-destructive'
 import { cn } from '@/lib/utils'
-import { usePathname, useRouter } from 'next/navigation'
-import { useAppContext } from '@/app/app-provider'
 
-// * Paths
-import { authPaths } from '@/middleware'
+// * Errors
+import handleErrorClient from '@/helpers/error/handleErrorClient'
 
 export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const { setUser } = useAppContext()
-
   const form = useForm<BodyLogin>({
     resolver: zodResolver(BodyLoginSchema),
     defaultValues: {
@@ -43,23 +41,22 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
     }
   })
 
+  const { handleLogin, setMessageError } = useAppContext()
+
   async function onSubmit(values: BodyLogin) {
     try {
       const {
-        payload: { data }
-      } = await authService.login(values)
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ onSubmit ~ user:', data.user)
-      setUser(data.user)
+        payload: { message }
+      } = await clientAuthServices.login(values)
+      toast.success(message, { richColors: true })
 
-      if (authPaths.some((path) => pathname.startsWith(path))) {
-        router.push('/')
-      } else {
-        router.back()
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ onSubmit ~ error:', error)
+      await handleLogin()
+    } catch (error: unknown) {
+      handleErrorClient({
+        error,
+        setErrorForm: form.setError,
+        setMessageError
+      })
     }
   }
 
@@ -101,6 +98,8 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
               <span className='relative z-10 bg-background px-2 text-muted-foreground'>Or continue with</span>
             </div>
 
+            <AlertDestructive />
+
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} noValidate>
                 <div className='grid gap-6'>
@@ -127,16 +126,18 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
                         <FormLabel>
                           Password <span className='text-red-600'>*</span>
                         </FormLabel>
-                        <a href='#' className='ml-auto inline-block text-sm underline-offset-4 hover:underline'>
+                        <Link href='#' className='ml-auto inline-block text-sm underline-offset-4 hover:underline'>
                           Forgot your password?
-                        </a>
+                        </Link>
                       </div>
                     }
                   />
 
-                  <Button type='submit' className='w-full'>
-                    Login
-                  </Button>
+                  <ButtonSubmitting form={form}>
+                    <Button type='submit' className='w-full'>
+                      Login
+                    </Button>
+                  </ButtonSubmitting>
                 </div>
               </form>
             </Form>
@@ -152,7 +153,8 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
       </Card>
 
       <div className='text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  '>
-        By clicking continue, you agree to our <a href='#'>Terms of Service</a> and <a href='#'>Privacy Policy</a>.
+        By clicking continue, you agree to our <Link href='#'>Terms of Service</Link> and
+        <Link href='#'>Privacy Policy</Link>.
       </div>
     </div>
   )

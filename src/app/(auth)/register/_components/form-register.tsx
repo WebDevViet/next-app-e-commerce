@@ -1,6 +1,7 @@
 'use client'
 
-// * Next
+// * Next React
+import { useAppContext } from '@/app/app-provider'
 import Link from 'next/link'
 
 // * Libraries
@@ -8,23 +9,29 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 // * Services Api
-import authService from '@/services/auth'
+import clientAuthServices from '@/services/client/auth'
 
 // * Schema
 import { BodyRegisterSchema, type BodyRegister } from '@/schemas/schemaValidations/authenSchema'
 
 // * Components
-// import InputPassword from '@/components/input-password'
 import PasswordRegister from '@/app/(auth)/register/_components/password-register'
+import ButtonSubmitting from '@/components/buttons/button-submitting'
 
 // * Shadcn
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
 
 // * Utils
 import { cn } from '@/lib/utils'
+
+// * Errors
+// import { HttpError401 } from '@/cores/http/interceptor/errorInterceptors'
+import { AlertDestructive } from '@/components/alert-destructive'
+import handleErrorClient from '@/helpers/error/handleErrorClient'
 
 export function FormRegister({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const form = useForm<BodyRegister>({
@@ -35,16 +42,22 @@ export function FormRegister({ className, ...props }: React.ComponentPropsWithou
     }
   })
 
+  const { handleLogin, setMessageError } = useAppContext()
+
   async function onSubmit(values: BodyRegister) {
     try {
       const {
-        payload: { data }
-      } = await authService.register(values)
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ onSubmit ~ data:', data)
+        payload: { message }
+      } = await clientAuthServices.register(values)
+      toast.success(message, { richColors: true })
+
+      await handleLogin()
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ onSubmit ~ error:', error)
+      handleErrorClient({
+        error,
+        setErrorForm: form.setError,
+        setMessageError
+      })
     }
   }
 
@@ -60,6 +73,10 @@ export function FormRegister({ className, ...props }: React.ComponentPropsWithou
           <CardDescription>Create an account with your email and password</CardDescription>
         </CardHeader>
         <CardContent>
+          <div className='mb-6'>
+            <AlertDestructive />
+          </div>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} noValidate>
               <div className='grid gap-6'>
@@ -82,9 +99,11 @@ export function FormRegister({ className, ...props }: React.ComponentPropsWithou
                 {/* <InputPassword form={form} serverErrorOnly /> */}
                 <PasswordRegister form={form} />
 
-                <Button type='submit' className='w-full'>
-                  Register
-                </Button>
+                <ButtonSubmitting form={form}>
+                  <Button type='submit' className='w-full'>
+                    Register
+                  </Button>
+                </ButtonSubmitting>
               </div>
             </form>
           </Form>
@@ -99,7 +118,8 @@ export function FormRegister({ className, ...props }: React.ComponentPropsWithou
       </Card>
 
       <div className='text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  '>
-        By clicking continue, you agree to our <a href='#'>Terms of Service</a> and <a href='#'>Privacy Policy</a>.
+        By clicking continue, you agree to our <Link href='#'>Terms of Service</Link> and
+        <Link href='#'>Privacy Policy</Link>.
       </div>
     </div>
   )

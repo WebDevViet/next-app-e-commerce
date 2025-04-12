@@ -1,17 +1,19 @@
-import { NextResponse } from 'next/server'
+// * Next
 import type { NextRequest } from 'next/server'
 
-const privatePaths = ['/me', /^\/products\/\d+\/edit$/]
-export const authPaths = ['/login', '/register']
+// * Paths
+import { authPaths, privatePaths } from '@/constants/path'
+import { NextResponse } from 'next/server'
+import { env } from '@/configs/env'
 
-// This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const refreshToken = request.cookies.get('refresh_token')?.value
+  const refreshToken = request.cookies.get('Authorization')?.value
 
-  if (pathname === '/ok-chua') {
+  if (pathname === env.PATH_LOGOUT) {
     const response = NextResponse.redirect(new URL('/login', request.url))
-    response.cookies.delete('refresh_token')
+    response.cookies.delete('Authorization')
+    response.cookies.delete('refresh-token')
     return response
   }
 
