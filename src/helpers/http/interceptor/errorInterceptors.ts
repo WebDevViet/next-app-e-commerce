@@ -6,7 +6,7 @@ import { TypeError } from '@/enums/typeError'
 
 // * Types
 import { ErrorInterceptor } from '@/types/interceptor'
-import { builderError, builderErrors } from '@/helpers/error/builderError'
+// import { builderError, builderErrors } from '@/helpers/error/builderError'
 
 export const payloadHttpError = z.object({
   data: z.null(),
@@ -44,7 +44,7 @@ export const throwHttpError: ErrorInterceptor = ({ responseHttp }) => {
 }
 
 // 401 Unauthorized
-export const [HttpError401] = builderError(401)
+// export const [HttpError401] = builderError(401)
 
 // 422 Unprocessable Entity
-export const [HttpError422, throwError422] = builderErrors(422)
+// export const [HttpError422, throwError422] = builderErrors(422)

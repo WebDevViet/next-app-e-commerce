@@ -269,3 +269,13 @@ Theo chuẩn Angular, 1 commit message sẽ theo cấu trúc như sau: **`type(s
 ## Shadcn UI
 
 [Install and configure shadcn/ui for Next.js](https://ui.shadcn.com/docs/installation/next)
+
+## SSL
+
+```json
+{
+  "script": {
+    "dev": "rm -rf .next && export NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" && next dev --experimental-https --turbopack"
+  }
+}
+```

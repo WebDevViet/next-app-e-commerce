@@ -5,6 +5,7 @@ export enum TypeError {
   BodyError = 'BodyError',
   AccessTokenExpiredError = 'AccessTokenExpiredError',
   RefreshTokenExpiredError = 'RefreshTokenExpiredError',
+  AuthenTokenExpiredError = 'AuthenTokenExpiredError',
   EmailVerificationTokenExpiredError = 'EmailVerificationTokenExpiredError',
   ForgotPasswordTokenExpiredError = 'ForgotPasswordTokenExpiredError',
   UnexpectedTokenError = 'UnexpectedTokenError',

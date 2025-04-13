@@ -23,13 +23,14 @@ interface ParamsHttpErrorClient {
 
 const handleErrorClient = async ({ error, setMessageError, setErrorForm, configToast = {} }: ParamsHttpErrorClient) => {
   if (!(error instanceof HttpError))
-    return toast.error('Đã xảy ra lỗi', {
+    return toast.error('Unexpected error', {
       description:
-        'Chúng tôi xin lỗi vì sự cố này. Vui lòng thử lại sau một chút hoặc liên hệ với chúng tôi để được hỗ trợ.',
+        'Something went wrong. Please try again later. If the problem persists, please contact the administrator.',
+      // 'Chúng tôi xin lỗi vì sự cố này. Vui lòng thử lại sau ít phút hoặc liên hệ với chúng tôi để được hỗ trợ.'
       ...configToast,
       richColors: true,
       action: {
-        label: 'Thử lại',
+        label: 'Details',
         onClick: () => {
           // eslint-disable-next-line no-console
           console.error(error)

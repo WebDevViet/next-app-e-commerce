@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // * Next
 import type { NextRequest } from 'next/server'
 
@@ -8,7 +9,8 @@ import { env } from '@/configs/env'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const refreshToken = request.cookies.get('Authorization')?.value
+  const refreshToken = request.cookies.get('refresh-token')?.value
+  console.log('🚀 ~ middleware ~ refreshToken:', refreshToken)
 
   if (pathname === env.PATH_LOGOUT) {
     const response = NextResponse.redirect(new URL('/login', request.url))

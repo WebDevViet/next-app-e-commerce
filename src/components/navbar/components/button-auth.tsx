@@ -11,6 +11,7 @@ import ButtonUser from '@/components/navbar/components/button-user'
 
 type Props = {
   btnProps?: ButtonProps
+  ignoreBtn?: 'auth' | 'user'
 }
 
 const auth = {
@@ -18,12 +19,12 @@ const auth = {
   register: { title: 'Register', url: '/register' }
 } as const
 
-const ButtonAuth = ({ btnProps = {} }: Props) => {
+const ButtonAuth = ({ btnProps = {}, ignoreBtn }: Props) => {
   const { isAuthenticated } = useAppContext()
   // const isAuthenticated = true
   return (
     <Show>
-      <Show.When isTrue={!isAuthenticated}>
+      <Show.When isTrue={!isAuthenticated && ignoreBtn !== 'auth'}>
         <Button asChild variant='outline' {...btnProps}>
           <Link href={auth.login.url}>{auth.login.title}</Link>
         </Button>
@@ -31,7 +32,9 @@ const ButtonAuth = ({ btnProps = {} }: Props) => {
           <Link href={auth.register.url}>{auth.register.title}</Link>
         </Button>
       </Show.When>
-      <Show.Else render={<ButtonUser />} />
+      <Show.When isTrue={isAuthenticated && ignoreBtn !== 'user'}>
+        <ButtonUser />
+      </Show.When>
     </Show>
   )
 }

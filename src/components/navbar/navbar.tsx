@@ -17,9 +17,12 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 // * Components
-import { ModeToggle } from '@/components/buttons/mode-toggle'
+import { ModeToggle } from '@/components/navbar/components/mode-toggle'
 import Logo from '@/components/navbar/components/logo'
 import ButtonAuth from '@/components/navbar/components/button-auth'
+import { ButtonLang } from '@/components/navbar/components/button-lang'
+
+// * Libs
 
 interface MenuItem {
   title: string
@@ -140,8 +143,9 @@ const Navbar = ({
 
           {/* Actions */}
           <div className='flex gap-2 min-w-48 justify-end items-center'>
+            <ButtonLang />
             <ModeToggle />
-            <ButtonAuth btnProps={{ size: 'sm' }} />
+            <ButtonAuth btnProps={{}} />
           </div>
         </nav>
 
@@ -161,13 +165,21 @@ const Navbar = ({
                     <Logo hasTitle={false} />
                   </SheetTitle>
                 </SheetHeader>
-                <div className='flex flex-col gap-6 p-4'>
+                <div className='flex flex-col gap-6 p-4 h-full'>
                   <Accordion type='single' collapsible className='flex w-full flex-col gap-4'>
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
-                  <div className='flex flex-col gap-3'>
-                    <ButtonAuth />
+                  {/* Actions */}
+                  <div className='flex flex-col gap-3 flex-grow justify-between'>
+                    <section className='flex flex-col gap-2'>
+                      <ModeToggle />
+                      <ButtonLang />
+                      <ButtonAuth ignoreBtn='user' />
+                    </section>
+                    <section className='flex justify-end flex-col gap-2'>
+                      <ButtonAuth ignoreBtn='auth' />
+                    </section>
                   </div>
                 </div>
               </SheetContent>
