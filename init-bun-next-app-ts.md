@@ -210,7 +210,7 @@ _package.json_
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": ["npm run fix-format", "git add ."]
+    "*.{js,jsx,ts,tsx}": ["bun run fix-format", "git add ."]
   }
   //...
 }
@@ -265,6 +265,16 @@ Theo chuẩn Angular, 1 commit message sẽ theo cấu trúc như sau: **`type(s
 - `scope` thì là optional, và nếu có thì nó nên là tên của package mà commit hiện tại làm ảnh hưởng. Mình thấy scope thường dùng ở các repository mà chứa nhiều packages dạng monorepo, ví dụ repo của Vue 3, scope sẽ là tên của 1 package nào đó ở folder packages
 
 - `subject` là nội dung của commit
+
+- VD:
+
+```bash
+git commit -m "feat: add new feature"
+```
+
+```bash
+git commit -m "fix(scope): fix bug"
+```
 
 ## Shadcn UI
 
