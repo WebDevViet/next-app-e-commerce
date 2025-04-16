@@ -19,19 +19,24 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/common/menu/dropdown-menu'
+import Show from '@/components/show'
 
 // * Components
-import { LogOut } from 'lucide-react'
+import { Loader2, LogOut } from 'lucide-react'
 
 const ButtonUser = () => {
-  const { user: user, handleLogout } = useAppContext()
-
+  const { user, handleLogout } = useAppContext()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className='cursor-pointer'>
-          <AvatarImage src='https://github.com/shadcn.png' alt='avatar' />
-          <AvatarFallback>CN</AvatarFallback>
+        <Avatar className='cursor-pointer justify-center items-center'>
+          <Show>
+            <Show.When isTrue={Boolean(user)}>
+              <AvatarImage src='https://github.com/shadcn.png' alt='avatar' />
+              <AvatarFallback>{user?.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
+            </Show.When>
+            <Show.Else render={<Loader2 className='animate-spin' />} />
+          </Show>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
