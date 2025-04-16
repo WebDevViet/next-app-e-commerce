@@ -6,7 +6,7 @@ import { authPaths, privatePaths } from '@/configs/path'
 import { NextResponse } from 'next/server'
 import { envServer } from '@/configs/envServer'
 
-const allowedOrigins = JSON.parse(envServer.ALLOWED_ORIGINS || '["http://localhost:3000"]')
+const allowedOrigins = JSON.parse(envServer.ALLOWED_ORIGINS || "['http://localhost:3000']")
 
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

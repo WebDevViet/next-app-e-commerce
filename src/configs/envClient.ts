@@ -1,7 +1,10 @@
 import z from 'zod'
 
 const envClientSchema = z.object({
-  NEXT_DEV: z.string().transform((value) => value === 'development')
+  NEXT_DEV: z
+    .string()
+    .optional()
+    .transform((value) => value === 'development')
 })
 
 export const envClientParsed = envClientSchema.safeParse({
