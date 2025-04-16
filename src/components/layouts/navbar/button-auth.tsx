@@ -4,10 +4,10 @@
 import Link from 'next/link'
 
 // * Components
-import { Button, ButtonProps } from '@/components/ui/button'
+import { Button, ButtonProps } from '@/components/common/buttons/button'
 import { useAppContext } from '@/app/app-provider'
 import Show from '@/components/show'
-import ButtonUser from '@/components/navbar/components/button-user'
+import ButtonUser from '@/components/layouts/navbar/button-user'
 
 type Props = {
   btnProps?: ButtonProps

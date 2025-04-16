@@ -1,5 +1,5 @@
 'use client'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/common/buttons/button'
 
 // Error boundaries must be Client Components
 

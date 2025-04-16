@@ -12,10 +12,10 @@ import clientUserServices from '@/services/client/user'
 
 // * Types
 import { GetMeResponse } from '@/types/response/userResponse'
-import { authPaths } from '@/constants/path'
+import { authPaths } from '@/configs/path'
 
 // * Shadcn
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from '@/components/common/notifications/sonner'
 import handleErrorClient from '@/helpers/error/handleErrorClient'
 
 const AppContext = createContext<{

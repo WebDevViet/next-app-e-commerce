@@ -1,4 +1,4 @@
-import { TypeError } from '@/enums/typeError'
+import { type TypeError } from '@/enums/typeError'
 
 export interface ResponseHttp<T> {
   status: number

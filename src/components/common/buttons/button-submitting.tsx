@@ -1,4 +1,4 @@
-import { ButtonLoading } from '@/components/buttons/button-loading'
+import { ButtonLoading } from '@/components/common/buttons/button-loading'
 import Show from '@/components/show'
 
 import { UseFormReturn } from 'react-hook-form'

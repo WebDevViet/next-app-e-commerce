@@ -6,6 +6,21 @@
 type GetUserResponse = {}
 ```
 
+_headers_
+
+```http
+Content-Type: application/json
+Authorization: Bearer <token>
+X-API-Key: abc123
+```
+
+_cookie_
+
+```http
+Set-Cookie: session_id=abc123; Path=/; HttpOnly; Secure
+Set-Cookie: user_pref=dark_mode; Max-Age=3600; SameSite=Strict
+```
+
 ## React
 
 ### Props

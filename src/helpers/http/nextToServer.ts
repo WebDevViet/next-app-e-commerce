@@ -11,7 +11,7 @@ import { z } from 'zod'
 import Http from '@/helpers/http/http'
 
 // * Config
-import { API_ROUTES } from '@/configs/apiRoutes'
+import { API_ROUTES } from '@/constants/apiRoutes'
 
 // * Types
 import { TypeError } from '@/enums/typeError'
@@ -22,20 +22,26 @@ import { payloadHttpError } from '@/helpers/http/interceptor/errorInterceptors'
 // * Utils
 import { BEARER_TOKEN_REGEX, JWT_REGEX } from '@/constants/regex'
 import { camelizeKeys } from '@/utils/changeCase'
+import { envServer } from '@/configs/envServer'
 
-const nextToServer = new Http({ baseUrl: process.env.NEXT_PUBLIC_API_SERVER, credentials: 'include' })
+const nextToServer = new Http({ baseUrl: envServer.API_SERVER + '/api', credentials: 'include' })
 
 nextToServer.requestInterceptor(async ({ fetchInit }) => {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('Authorization')?.value
   const refreshToken = cookieStore.get('refresh-token')?.value
 
-  fetchInit.headers = {
-    ...fetchInit.headers,
-    ...(accessToken && { Cookie: `Authorization=${accessToken}` }),
-    ...(refreshToken && { Cookie: `refresh-token=${refreshToken}` }),
-    ...(accessToken && refreshToken && { Cookie: `Authorization=${accessToken}; refresh-token=${refreshToken}` })
+  const headers = new Headers(fetchInit.headers)
+
+  if (accessToken) {
+    headers.append('Cookie', `Authorization=${accessToken}`)
   }
+  if (refreshToken) {
+    headers.append('Cookie', `refresh-token=${refreshToken}`)
+  }
+  headers.set('x-api-key', envServer.API_KEY)
+
+  fetchInit.headers = headers
 
   return fetchInit
 })
@@ -45,7 +51,7 @@ nextToServer.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
   if (!error.success) return
 
   if (error.data.typeError === TypeError.AccessTokenExpiredError) {
-    http.refreshingToken ??= (async () => await http.post(API_ROUTES.AUTH.REFRESH_TOKEN))()
+    http.refreshingToken ??= (async () => await http.post(API_ROUTES.auth.refreshToken))()
 
     try {
       const { response } = await http.refreshingToken

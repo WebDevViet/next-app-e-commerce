@@ -2,13 +2,13 @@
 import clientToServer from '@/helpers/http/clientToServer'
 
 // * Config
-import { API_ROUTES } from '@/configs/apiRoutes'
+import { API_ROUTES } from '@/constants/apiRoutes'
 
 // * Types
 import { GetMeResponse } from '@/types/response/userResponse'
 
 const clientUserServices = {
-  getMe: () => clientToServer.get<GetMeResponse>(API_ROUTES.USERS.ME)
+  getMe: () => clientToServer.get<GetMeResponse>(API_ROUTES.users.me)
 }
 
 export default clientUserServices

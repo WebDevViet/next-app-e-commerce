@@ -15,29 +15,32 @@ import clientAuthServices from '@/services/client/auth'
 import { BodyLoginSchema, type BodyLogin } from '@/schemas/schemaValidations/authenSchema'
 
 // * Components
-import ButtonSubmitting from '@/components/buttons/button-submitting'
-import InputPassword from '@/components/input-password'
+import ButtonSubmitting from '@/components/common/buttons/button-submitting'
+import InputPassword from '@/components/common/form/inputs/input-password'
 
 // * Shadcn
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/common/buttons/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/common/form/form'
+import { Input } from '@/components/common/form/inputs/input'
 import { toast } from 'sonner'
 
 // * Utils
-import { AlertDestructive } from '@/components/alert-destructive'
+import { AlertDestructive } from '@/components/common/notifications/alert-destructive'
 import { cn } from '@/lib/utils'
 
 // * Errors
 import handleErrorClient from '@/helpers/error/handleErrorClient'
+import { envClient } from '@/configs/envClient'
+
+const isNextDev = envClient.NEXT_DEV
 
 export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const form = useForm<BodyLogin>({
     resolver: zodResolver(BodyLoginSchema),
     defaultValues: {
-      email: '',
-      password: ''
+      email: isNextDev ? 'admin@gmail.com' : '',
+      password: isNextDev ? 'Admin123!' : ''
     }
   })
 

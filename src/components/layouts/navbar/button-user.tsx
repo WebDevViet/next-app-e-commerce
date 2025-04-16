@@ -4,7 +4,7 @@
 import { useAppContext } from '@/app/app-provider'
 
 // * Shadcn
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/common/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
+} from '@/components/common/menu/dropdown-menu'
 
 // * Components
 import { LogOut } from 'lucide-react'

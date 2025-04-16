@@ -4,8 +4,8 @@ import Link from 'next/link'
 // * Shadcn
 import { Book, Menu, Sunset, Trees, Zap } from 'lucide-react'
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Button } from '@/components/ui/button'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/common/menu/accordion'
+import { Button } from '@/components/common/buttons/button'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,14 +13,14 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger
-} from '@/components/ui/navigation-menu'
+} from '@/components/common/menu/navigation-menu'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 // * Components
-import { ModeToggle } from '@/components/navbar/components/mode-toggle'
-import Logo from '@/components/navbar/components/logo'
-import ButtonAuth from '@/components/navbar/components/button-auth'
-import { ButtonLang } from '@/components/navbar/components/button-lang'
+import { ModeToggle } from '@/components/layouts/navbar/mode-toggle'
+import Logo from '@/components/layouts/navbar/logo'
+import ButtonAuth from '@/components/layouts/navbar/button-auth'
+import { ButtonLang } from '@/components/layouts/navbar/button-lang'
 
 // * Libs
 

@@ -1,17 +1,17 @@
 // * Types
-import { API_ROUTES } from '@/configs/apiRoutes'
+import { API_ROUTES } from '@/constants/apiRoutes'
 import { TypeError } from '@/enums/typeError'
 import Http from '@/helpers/http/http'
 import { payloadHttpError } from '@/helpers/http/interceptor/errorInterceptors'
 
-const clientToServer = new Http({ baseUrl: process.env.NEXT_PUBLIC_API_SERVER, credentials: 'include' })
+const clientToServer = new Http({ baseUrl: '/api', credentials: 'include' })
 
 clientToServer.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
   const error = payloadHttpError.safeParse(responseHttp.payload)
   if (!error.success) return
 
   if (error.data.typeError === TypeError.AccessTokenExpiredError) {
-    http.refreshingToken ??= (async () => await http.post(API_ROUTES.AUTH.REFRESH_TOKEN))()
+    http.refreshingToken ??= (async () => await http.post(API_ROUTES.auth.refreshToken))()
 
     try {
       await http.refreshingToken

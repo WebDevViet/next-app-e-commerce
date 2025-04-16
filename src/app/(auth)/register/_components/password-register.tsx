@@ -8,7 +8,7 @@ import { type BodyRegister } from '@/schemas/schemaValidations/authenSchema'
 import { type UseFormReturn } from 'react-hook-form'
 
 // * Component
-import InputPassword from '@/components/input-password'
+import InputPassword from '@/components/common/form/inputs/input-password'
 
 // * Icons
 import { Check, X } from 'lucide-react'

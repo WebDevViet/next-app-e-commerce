@@ -55,6 +55,8 @@ class Http {
         body = JSON.stringify(options.body)
       }
 
+      url = `/${url.replace(/^\/+/, '')}`
+
       const fetchInit: FetchInit = {
         ...this.requestBase,
         ...options,
@@ -71,7 +73,7 @@ class Http {
         })
       )
 
-      const fullUrl = this.baseUrl ? `${this.baseUrl}/${url.replace(/^\/+/, '')}` : url
+      const fullUrl = `${this.baseUrl}${url}`
 
       const response = await fetch(fullUrl, fetchInit)
 
@@ -108,7 +110,7 @@ class Http {
     }
 
   async retry<T = null>(fetchInit: FetchInit): Promise<ResponseSuccess<T>> {
-    return this.request(fetchInit.method)<T>(fetchInit?.url, fetchInit)
+    return this.request(fetchInit.method)<T>(fetchInit.url, fetchInit)
   }
 
   get = this.request('GET')

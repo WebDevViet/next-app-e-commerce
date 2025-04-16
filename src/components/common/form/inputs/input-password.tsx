@@ -11,8 +11,8 @@ import { type BodyRegister } from '@/schemas/schemaValidations/authenSchema'
 import { type UseFormReturn } from 'react-hook-form'
 
 // * Components
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/common/form/form'
+import { Input } from '@/components/common/form/inputs/input'
 
 // * Icons
 import { Eye, EyeOff } from 'lucide-react'
