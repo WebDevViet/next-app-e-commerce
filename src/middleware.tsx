@@ -51,18 +51,14 @@ export function middleware(request: NextRequest) {
   if (url.pathname.startsWith('/api/')) {
     const requestHeaders = new Headers(request.headers)
     requestHeaders.set('x-api-key', envServer.API_KEY)
-
-    requestHeaders.forEach((value, key) => {
-      if (key === 'x-api-key') {
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ middleware ~ x-api-key:', value)
-      }
-    })
+    requestHeaders.set('x-test-header', '------------test-request-header------------')
 
     const rewrittenUrl = `${envServer.API_SERVER}${url.pathname}${url.search}`
     // console.log('🚀 ~ middleware ~ rewrittenUrl:', rewrittenUrl)
     return NextResponse.rewrite(rewrittenUrl, {
-      headers: requestHeaders
+      request: {
+        headers: requestHeaders
+      }
     })
   }
 
