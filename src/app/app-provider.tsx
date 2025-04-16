@@ -25,8 +25,8 @@ const AppContext = createContext<{
   handleLogout: () => Promise<void>
   messageError: string | null
   setMessageError: Dispatch<SetStateAction<string | null>>
-  authStatus: 'loading' | 'unLogin' | 'logged'
-  setAuthStatus: Dispatch<SetStateAction<'loading' | 'unLogin' | 'logged'>>
+  authLoading: boolean
+  setAuthLoading: Dispatch<SetStateAction<boolean>>
 }>({
   user: null,
   setUser: () => {},
@@ -34,8 +34,8 @@ const AppContext = createContext<{
   handleLogout: async () => {},
   messageError: null,
   setMessageError: () => {},
-  authStatus: 'unLogin',
-  setAuthStatus: () => {}
+  authLoading: false,
+  setAuthLoading: () => {}
 })
 export const useAppContext = () => {
   const context = useContext(AppContext)
@@ -48,7 +48,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
 
   const [user, setUser] = useState<GetMeResponse | null>(null)
   const [messageError, setMessageError] = useState<string | null>(null)
-  const [authStatus, setAuthStatus] = useState<'loading' | 'unLogin' | 'logged'>('unLogin')
+  const [authLoading, setAuthLoading] = useState<boolean>(false)
 
   const mounted = useRef(false)
 
@@ -58,7 +58,10 @@ export default function AppProvider({ children }: { children: React.ReactNode })
       return
     }
 
-    if (!user) localStorage.removeItem('user')
+    if (!user) {
+      localStorage.removeItem('user')
+      return
+    }
 
     localStorage.setItem('user', JSON.stringify(user))
   }, [user])
@@ -67,19 +70,19 @@ export default function AppProvider({ children }: { children: React.ReactNode })
     const userStore = localStorage.getItem('user')
 
     if (!userStore || userStore === 'null') return setUser(null)
-    setAuthStatus('loading')
-    setUser(JSON.parse(userStore))
     ;(async function () {
       try {
+        setAuthLoading(true)
+        setUser(JSON.parse(userStore))
         const {
           payload: { data }
         } = await clientUserServices.getMe()
         setUser(data)
-        setAuthStatus('logged')
       } catch (error) {
         setUser(null)
-        setAuthStatus('unLogin')
         handleErrorClient({ error })
+      } finally {
+        setAuthLoading(false)
       }
     })()
   }, [])
@@ -87,14 +90,13 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   const valueContext = useMemo(() => {
     return {
       async handleLogin() {
-        setAuthStatus('loading')
         try {
+          setAuthLoading(true)
           const {
             payload: { data }
           } = await clientUserServices.getMe()
 
           setUser(data)
-          setAuthStatus('logged')
 
           if (authPaths.some((path) => pathname.startsWith(path))) {
             router.push('/')
@@ -102,8 +104,9 @@ export default function AppProvider({ children }: { children: React.ReactNode })
             router.back()
           }
         } catch (error) {
-          setAuthStatus('unLogin')
           throw error
+        } finally {
+          setAuthLoading(false)
         }
       },
       async handleLogout() {
@@ -114,10 +117,10 @@ export default function AppProvider({ children }: { children: React.ReactNode })
       setUser,
       messageError,
       setMessageError,
-      authStatus,
-      setAuthStatus
+      authLoading,
+      setAuthLoading
     }
-  }, [user, messageError, authStatus, pathname, router])
+  }, [user, messageError, authLoading, pathname, router])
 
   return (
     <AppContext.Provider value={valueContext}>

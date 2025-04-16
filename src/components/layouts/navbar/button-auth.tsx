@@ -20,10 +20,10 @@ const auth = {
 } as const
 
 const ButtonAuth = ({ btnProps = {}, ignoreBtn }: Props) => {
-  const { authStatus } = useAppContext()
+  const { user } = useAppContext()
   return (
     <Show>
-      <Show.When isTrue={authStatus === 'unLogin' && ignoreBtn !== 'auth'}>
+      <Show.When isTrue={!user && ignoreBtn !== 'auth'}>
         <Button asChild variant='outline' {...btnProps}>
           <Link href={auth.login.url}>{auth.login.title}</Link>
         </Button>
@@ -31,7 +31,7 @@ const ButtonAuth = ({ btnProps = {}, ignoreBtn }: Props) => {
           <Link href={auth.register.url}>{auth.register.title}</Link>
         </Button>
       </Show.When>
-      <Show.When isTrue={authStatus !== 'unLogin' && ignoreBtn !== 'user'}>
+      <Show.When isTrue={!!user && ignoreBtn !== 'user'}>
         <ButtonUser />
       </Show.When>
     </Show>
