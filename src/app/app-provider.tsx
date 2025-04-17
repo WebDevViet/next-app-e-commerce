@@ -72,7 +72,6 @@ export default function AppProvider({ children }: { children: React.ReactNode })
     if (!userStore || userStore === 'null') return setUser(null)
     ;(async function () {
       try {
-        setAuthLoading(true)
         setUser(JSON.parse(userStore))
         const {
           payload: { data }
@@ -81,8 +80,6 @@ export default function AppProvider({ children }: { children: React.ReactNode })
       } catch (error) {
         setUser(null)
         handleErrorClient({ error })
-      } finally {
-        setAuthLoading(false)
       }
     })()
   }, [])
