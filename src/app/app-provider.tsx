@@ -15,27 +15,42 @@ import { GetMeResponse } from '@/types/response/userResponse'
 import { authPaths } from '@/configs/path'
 
 // * Shadcn
-import { Toaster } from '@/components/common/notifications/sonner'
+import { Toaster } from '@/components/ui/sonner'
+
+// * Utils
 import handleErrorClient from '@/helpers/error/handleErrorClient'
+
+// * Zod
+import { z } from 'zod'
+import { USERNAME_REGEX } from '@/constants/regex'
+import { isClient } from '@/utils/checkEnvironment'
+
+const userStoreSchema = z.object({
+  email: z.string().trim().nonempty().email(),
+  avatar: z.union([z.literal(''), z.string().url()]),
+  username: z.string().trim().min(4).max(15).regex(USERNAME_REGEX)
+})
 
 const AppContext = createContext<{
   user: GetMeResponse | null
   setUser: (user: GetMeResponse | null) => void
-  handleLogin: () => Promise<void>
+  handleGetMe: () => Promise<void>
   handleLogout: () => Promise<void>
   messageError: string | null
   setMessageError: Dispatch<SetStateAction<string | null>>
   authLoading: boolean
   setAuthLoading: Dispatch<SetStateAction<boolean>>
+  isAuthenticated: boolean | null
 }>({
   user: null,
   setUser: () => {},
-  handleLogin: async () => {},
+  handleGetMe: async () => {},
   handleLogout: async () => {},
   messageError: null,
   setMessageError: () => {},
   authLoading: false,
-  setAuthLoading: () => {}
+  setAuthLoading: () => {},
+  isAuthenticated: null
 })
 export const useAppContext = () => {
   const context = useContext(AppContext)
@@ -49,12 +64,47 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   const [user, setUser] = useState<GetMeResponse | null>(null)
   const [messageError, setMessageError] = useState<string | null>(null)
   const [authLoading, setAuthLoading] = useState<boolean>(false)
+  const [isAuthenticated, setAuthenticated] = useState<boolean | null>(null)
 
-  const mounted = useRef(false)
+  const appMounted = useRef(false)
 
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true
+    const isAuthenticated = isClient() && document.cookie.includes('logged_in=true')
+
+    if (!isAuthenticated) return setAuthenticated(false)
+    setAuthenticated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    const userStore = localStorage.getItem('user')
+
+    const userStoreParsed = userStoreSchema.safeParse(userStore && JSON.parse(userStore))
+
+    if (userStoreParsed.success) {
+      return setUser(userStoreParsed.data)
+    }
+
+    ;(async function () {
+      try {
+        setAuthLoading(true)
+        const {
+          payload: { data }
+        } = await clientUserServices.getMe()
+        setUser(data)
+      } catch (error) {
+        setUser(null)
+        handleErrorClient({ error })
+      } finally {
+        setAuthLoading(false)
+      }
+    })()
+  }, [isAuthenticated])
+
+  useEffect(() => {
+    if (!appMounted.current) {
+      appMounted.current = true
       return
     }
 
@@ -66,27 +116,9 @@ export default function AppProvider({ children }: { children: React.ReactNode })
     localStorage.setItem('user', JSON.stringify(user))
   }, [user])
 
-  useEffect(() => {
-    const userStore = localStorage.getItem('user')
-
-    if (!userStore || userStore === 'null') return setUser(null)
-    ;(async function () {
-      try {
-        setUser(JSON.parse(userStore))
-        const {
-          payload: { data }
-        } = await clientUserServices.getMe()
-        setUser(data)
-      } catch (error) {
-        setUser(null)
-        handleErrorClient({ error })
-      }
-    })()
-  }, [])
-
   const valueContext = useMemo(() => {
     return {
-      async handleLogin() {
+      async handleGetMe() {
         try {
           setAuthLoading(true)
           const {
@@ -94,6 +126,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
           } = await clientUserServices.getMe()
 
           setUser(data)
+          setAuthenticated(true)
 
           if (authPaths.some((path) => pathname.startsWith(path))) {
             router.push('/')
@@ -108,6 +141,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
       },
       async handleLogout() {
         setUser(null)
+        setAuthenticated(false)
         await actionLogout()
       },
       user,
@@ -115,9 +149,10 @@ export default function AppProvider({ children }: { children: React.ReactNode })
       messageError,
       setMessageError,
       authLoading,
-      setAuthLoading
+      setAuthLoading,
+      isAuthenticated
     }
-  }, [user, messageError, authLoading, pathname, router])
+  }, [user, messageError, authLoading, pathname, router, isAuthenticated])
 
   return (
     <AppContext.Provider value={valueContext}>

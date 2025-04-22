@@ -1,6 +1,6 @@
 import { AlertCircle } from 'lucide-react'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/common/notifications/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useAppContext } from '@/app/app-provider'
 import { useEffect } from 'react'
 

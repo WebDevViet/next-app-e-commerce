@@ -19,10 +19,10 @@ import PasswordRegister from '@/app/(auth)/register/_components/password-registe
 import ButtonSubmitting from '@/components/common/buttons/button-submitting'
 
 // * Shadcn
-import { Button } from '@/components/common/buttons/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/common/form/form'
-import { Input } from '@/components/common/form/inputs/input'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 
 // * Utils
@@ -30,7 +30,7 @@ import { cn } from '@/lib/utils'
 
 // * Errors
 // import { HttpError401 } from '@/cores/http/interceptor/errorInterceptors'
-import { AlertDestructive } from '@/components/common/notifications/alert-destructive'
+import { AlertDestructive } from '@/components/ui/alert-destructive'
 import handleErrorClient from '@/helpers/error/handleErrorClient'
 
 export function FormRegister({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
@@ -42,7 +42,7 @@ export function FormRegister({ className, ...props }: React.ComponentPropsWithou
     }
   })
 
-  const { handleLogin, setMessageError } = useAppContext()
+  const { handleGetMe, setMessageError } = useAppContext()
 
   async function onSubmit(values: BodyRegister) {
     try {
@@ -51,7 +51,7 @@ export function FormRegister({ className, ...props }: React.ComponentPropsWithou
       } = await clientAuthServices.register(values)
       toast.success(message, { richColors: true })
 
-      await handleLogin()
+      await handleGetMe()
     } catch (error) {
       handleErrorClient({
         error,

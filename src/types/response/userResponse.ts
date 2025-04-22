@@ -17,4 +17,4 @@ export interface User {
   viewedProducts: string[]
 }
 
-export type GetMeResponse = Pick<User, 'username'>
+export type GetMeResponse = Pick<User, 'username' | 'email' | 'avatar'>

@@ -19,14 +19,14 @@ import ButtonSubmitting from '@/components/common/buttons/button-submitting'
 import InputPassword from '@/components/common/form/inputs/input-password'
 
 // * Shadcn
-import { Button } from '@/components/common/buttons/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/common/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/common/form/form'
-import { Input } from '@/components/common/form/inputs/input'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import { AlertDestructive } from '@/components/ui/alert-destructive'
 
 // * Utils
-import { AlertDestructive } from '@/components/common/notifications/alert-destructive'
 import { cn } from '@/lib/utils'
 
 // * Errors
@@ -44,7 +44,7 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
     }
   })
 
-  const { handleLogin, setMessageError } = useAppContext()
+  const { handleGetMe, setMessageError } = useAppContext()
 
   async function onSubmit(values: BodyLogin) {
     try {
@@ -53,7 +53,7 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
       } = await clientAuthServices.login(values)
       toast.success(message, { richColors: true })
 
-      await handleLogin()
+      await handleGetMe()
     } catch (error: unknown) {
       handleErrorClient({
         error,

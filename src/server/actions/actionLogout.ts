@@ -19,6 +19,7 @@ export async function actionLogout() {
   } finally {
     cookieStore.delete('Authorization')
     cookieStore.delete('refresh-token')
+
     redirect('/login')
   }
 }
