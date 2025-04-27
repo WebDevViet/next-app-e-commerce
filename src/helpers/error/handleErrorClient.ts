@@ -50,7 +50,7 @@ const handleErrorClient = async ({ error, setMessageError, setErrorForm, configT
       case TypeError.JsonWebTokenError:
       case TypeError.NotBeforeError:
       case TypeError.RefreshTokenExpiredError:
-        localStorage.setItem('user', 'null')
+        localStorage.removeItem('user')
         await actionLogout()
         break
       default:

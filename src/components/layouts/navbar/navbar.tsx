@@ -21,6 +21,7 @@ import NavUser from '@/components/layouts/navbar/nav-user'
 import { NavbarMobile } from '@/components/layouts/navbar/mobile/navbar-mobile'
 import { SubNavbarMenuLink } from '@/components/layouts/navbar/sub-navbar-menu-link'
 import ProtectedView from '@/components/view-protected'
+import { ActionsNavbarTablet } from '@/components/layouts/navbar/tablet/actions-navbar-tablet'
 
 export interface NavbarMenuItem {
   title: string
@@ -31,14 +32,8 @@ export interface NavbarMenuItem {
 }
 
 export interface PropsNavbar {
-  logo?: {
-    url: string
-    src: string
-    alt: string
-    title: string
-  }
-  menu?: NavbarMenuItem[]
-  auth?: {
+  menu: NavbarMenuItem[]
+  auth: {
     login: {
       title: string
       url: string
@@ -50,83 +45,84 @@ export interface PropsNavbar {
   }
 }
 
-const Navbar = ({
-  menu = [
-    { title: 'Home', url: '/' },
-    {
-      title: 'Products',
-      url: '#',
-      items: [
-        {
-          title: 'Blog',
-          description: 'The latest industry news, updates, and info',
-          icon: <Book className='size-5 shrink-0' />,
-          url: '#'
-        },
-        {
-          title: 'Company',
-          description: 'Our mission is to innovate and empower the world',
-          icon: <Trees className='size-5 shrink-0' />,
-          url: '#'
-        },
-        {
-          title: 'Careers',
-          description: 'Browse job listing and discover our workspace',
-          icon: <Sunset className='size-5 shrink-0' />,
-          url: '#'
-        },
-        {
-          title: 'Support',
-          description: 'Get in touch with our support team or visit our community forums',
-          icon: <Zap className='size-5 shrink-0' />,
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Resources',
-      url: '#',
-      items: [
-        {
-          title: 'Help Center',
-          description: 'Get all the answers you need right here',
-          icon: <Zap className='size-5 shrink-0' />,
-          url: '#'
-        },
-        {
-          title: 'Contact Us',
-          description: 'We are here to help you with any questions you have',
-          icon: <Sunset className='size-5 shrink-0' />,
-          url: '#'
-        },
-        {
-          title: 'Status',
-          description: 'Check the current status of our services and APIs',
-          icon: <Trees className='size-5 shrink-0' />,
-          url: '#'
-        },
-        {
-          title: 'Terms of Service',
-          description: 'Our terms and conditions for using our services',
-          icon: <Book className='size-5 shrink-0' />,
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Pricing',
-      url: '#'
-    },
-    {
-      title: 'Blog',
-      url: '#'
-    }
-  ],
-  auth = {
-    login: { title: 'Login', url: '/login' },
-    register: { title: 'Register', url: '/register' }
+const menu = [
+  { title: 'Home', url: '/' },
+  {
+    title: 'Products',
+    url: '#',
+    items: [
+      {
+        title: 'Blog',
+        description: 'The latest industry news, updates, and info',
+        icon: <Book className='size-5 shrink-0' />,
+        url: '#'
+      },
+      {
+        title: 'Company',
+        description: 'Our mission is to innovate and empower the world',
+        icon: <Trees className='size-5 shrink-0' />,
+        url: '#'
+      },
+      {
+        title: 'Careers',
+        description: 'Browse job listing and discover our workspace',
+        icon: <Sunset className='size-5 shrink-0' />,
+        url: '#'
+      },
+      {
+        title: 'Support',
+        description: 'Get in touch with our support team or visit our community forums',
+        icon: <Zap className='size-5 shrink-0' />,
+        url: '#'
+      }
+    ]
+  },
+  {
+    title: 'Resources',
+    url: '#',
+    items: [
+      {
+        title: 'Help Center',
+        description: 'Get all the answers you need right here',
+        icon: <Zap className='size-5 shrink-0' />,
+        url: '#'
+      },
+      {
+        title: 'Contact Us',
+        description: 'We are here to help you with any questions you have',
+        icon: <Sunset className='size-5 shrink-0' />,
+        url: '#'
+      },
+      {
+        title: 'Status',
+        description: 'Check the current status of our services and APIs',
+        icon: <Trees className='size-5 shrink-0' />,
+        url: '#'
+      },
+      {
+        title: 'Terms of Service',
+        description: 'Our terms and conditions for using our services',
+        icon: <Book className='size-5 shrink-0' />,
+        url: '#'
+      }
+    ]
+  },
+  {
+    title: 'Pricing',
+    url: '#'
+  },
+  {
+    title: 'Blog',
+    url: '#'
   }
-}: PropsNavbar) => {
+]
+
+const auth = {
+  login: { title: 'Login', url: '/login' },
+  register: { title: 'Register', url: '/register' }
+}
+
+const Navbar = () => {
   return (
     <section className='py-4 px-6 border-b flex items-center justify-center sticky top-0 z-[50] bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
       <div className='container'>
@@ -145,25 +141,27 @@ const Navbar = ({
 
           {/* Actions */}
           <div className='flex items-center min-w-[260px] justify-end gap-2'>
-            <ButtonLang />
-            <ModeToggle />
-            <ProtectedView forGuest>
-              <Button asChild variant='outline'>
-                <Link href={auth.login.url}>{auth.login.title}</Link>
-              </Button>
-              <Button asChild>
-                <Link href={auth.register.url}>{auth.register.title}</Link>
-              </Button>
-            </ProtectedView>
-            <ProtectedView forUser>
-              <NavUser />
+            <ProtectedView>
+              <ButtonLang />
+              <ModeToggle />
+              <ProtectedView forGuest>
+                <Button asChild variant='outline'>
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+                <Button asChild>
+                  <Link href={auth.register.url}>{auth.register.title}</Link>
+                </Button>
+              </ProtectedView>
+              <ProtectedView forUser>
+                <NavUser />
+              </ProtectedView>
             </ProtectedView>
           </div>
         </nav>
 
         {/* Tablet Menu */}
         <nav className='hidden justify-between md:max-xl:flex'>
-          <div className='flex items-center min-w-[260px]'>
+          <div className='flex items-center min-w-24'>
             <Logo />
           </div>
 
@@ -175,20 +173,8 @@ const Navbar = ({
           </div>
 
           {/* Actions */}
-          <div className='flex items-center min-w-[260px] justify-end gap-2'>
-            {/* <ButtonLang />
-            <ModeToggle /> */}
-            <ProtectedView forGuest>
-              <Button asChild variant='outline'>
-                <Link href={auth.login.url}>{auth.login.title}</Link>
-              </Button>
-              <Button asChild>
-                <Link href={auth.register.url}>{auth.register.title}</Link>
-              </Button>
-            </ProtectedView>
-            <ProtectedView forUser>
-              <NavUser />
-            </ProtectedView>
+          <div className='flex items-center min-w-24 justify-end gap-2'>
+            <ActionsNavbarTablet auth={auth} />
           </div>
         </nav>
 

@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 // * Shadcn
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { Button } from '@/components/ui/button'
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Menu } from 'lucide-react'
 
@@ -16,12 +17,8 @@ import ProtectedView from '@/components/view-protected'
 // * Types
 import NavUserMobile from '@/components/layouts/navbar/mobile/nav-user-mobile'
 import type { NavbarMenuItem, PropsNavbar } from '@/components/layouts/navbar/navbar'
-import { Button } from '@/components/ui/button'
 
-const NavbarMobile = ({
-  menu = [],
-  auth = { login: { title: '', url: '' }, register: { title: '', url: '' } }
-}: PropsNavbar) => {
+const NavbarMobile = ({ menu, auth }: PropsNavbar) => {
   return (
     <div className='block md:hidden'>
       <div className='flex items-center justify-between'>
@@ -80,7 +77,9 @@ const renderMobileMenuItem = (item: NavbarMenuItem) => {
         <AccordionTrigger className='text-md py-0 font-semibold hover:no-underline'>{item.title}</AccordionTrigger>
         <AccordionContent className='mt-2'>
           {item.items.map((subItem) => (
-            <SubNavbarMenuLink key={subItem.title} item={subItem} />
+            <SheetClose asChild key={subItem.title}>
+              <SubNavbarMenuLink item={subItem} />
+            </SheetClose>
           ))}
         </AccordionContent>
       </AccordionItem>

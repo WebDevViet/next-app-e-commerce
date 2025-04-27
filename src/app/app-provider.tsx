@@ -1,8 +1,8 @@
 'use client'
 
 // * Next React
-import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { createContext, Dispatch, SetStateAction, use, useEffect, useMemo, useRef, useState } from 'react'
 
 // * Actions
 import { actionLogout } from '@/server/actions/actionLogout'
@@ -11,8 +11,8 @@ import { actionLogout } from '@/server/actions/actionLogout'
 import clientUserServices from '@/services/client/user'
 
 // * Types
-import { GetMeResponse } from '@/types/response/userResponse'
 import { authPaths } from '@/configs/path'
+import { GetMeResponse } from '@/types/response/userResponse'
 
 // * Shadcn
 import { Toaster } from '@/components/ui/sonner'
@@ -21,9 +21,9 @@ import { Toaster } from '@/components/ui/sonner'
 import handleErrorClient from '@/helpers/error/handleErrorClient'
 
 // * Zod
-import { z } from 'zod'
 import { USERNAME_REGEX } from '@/constants/regex'
 import { isClient } from '@/utils/checkEnvironment'
+import { z } from 'zod'
 
 const userStoreSchema = z.object({
   email: z.string().trim().nonempty().email(),
@@ -52,10 +52,8 @@ const AppContext = createContext<{
   setAuthLoading: () => {},
   isAuthenticated: null
 })
-export const useAppContext = () => {
-  const context = useContext(AppContext)
-  return context
-}
+
+export const useAppContext = () => use(AppContext)
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -68,55 +66,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
 
   const appMounted = useRef(false)
 
-  useEffect(() => {
-    const isAuthenticated = isClient() && document.cookie.includes('logged_in=true')
-
-    if (!isAuthenticated) return setAuthenticated(false)
-    setAuthenticated(true)
-  }, [])
-
-  useEffect(() => {
-    if (!isAuthenticated) return
-
-    const userStore = localStorage.getItem('user')
-
-    const userStoreParsed = userStoreSchema.safeParse(userStore && JSON.parse(userStore))
-
-    if (userStoreParsed.success) {
-      return setUser(userStoreParsed.data)
-    }
-
-    ;(async function () {
-      try {
-        setAuthLoading(true)
-        const {
-          payload: { data }
-        } = await clientUserServices.getMe()
-        setUser(data)
-      } catch (error) {
-        setUser(null)
-        handleErrorClient({ error })
-      } finally {
-        setAuthLoading(false)
-      }
-    })()
-  }, [isAuthenticated])
-
-  useEffect(() => {
-    if (!appMounted.current) {
-      appMounted.current = true
-      return
-    }
-
-    if (!user) {
-      localStorage.removeItem('user')
-      return
-    }
-
-    localStorage.setItem('user', JSON.stringify(user))
-  }, [user])
-
-  const valueContext = useMemo(() => {
+  const valueAppContext = useMemo(() => {
     return {
       async handleGetMe() {
         try {
@@ -154,8 +104,56 @@ export default function AppProvider({ children }: { children: React.ReactNode })
     }
   }, [user, messageError, authLoading, pathname, router, isAuthenticated])
 
+  useEffect(() => {
+    const isAuthenticated = isClient() && document.cookie.includes('logged_in=true')
+
+    if (!isAuthenticated) return setAuthenticated(false)
+    setAuthenticated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    const userStore = localStorage.getItem('user')
+
+    const userStoreParsed = userStoreSchema.safeParse(userStore && JSON.parse(userStore))
+
+    if (userStoreParsed.success) {
+      return setUser(userStoreParsed.data)
+    }
+
+    ;(async function () {
+      try {
+        setAuthLoading(true)
+        const {
+          payload: { data }
+        } = await clientUserServices.getMe()
+        setUser(data)
+      } catch (error) {
+        setAuthenticated(false)
+        handleErrorClient({ error })
+      } finally {
+        setAuthLoading(false)
+      }
+    })()
+  }, [isAuthenticated])
+
+  useEffect(() => {
+    if (!appMounted.current) {
+      appMounted.current = true
+      return
+    }
+
+    if (!user) {
+      localStorage.removeItem('user')
+      return
+    }
+
+    localStorage.setItem('user', JSON.stringify(user))
+  }, [user])
+
   return (
-    <AppContext.Provider value={valueContext}>
+    <AppContext.Provider value={valueAppContext}>
       {children}
       <Toaster />
     </AppContext.Provider>

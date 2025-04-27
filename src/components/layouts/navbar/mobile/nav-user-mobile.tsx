@@ -9,7 +9,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { MoreVerticalIcon, User } from 'lucide-react'
-import { Skeleton } from '@/components/ui/skeleton'
 
 // * Components
 
@@ -26,14 +25,14 @@ const NavUserMobile = () => {
               <User />
             </AvatarFallback>
           </Avatar>
-          {/* <div className='grid flex-1 text-left text-sm leading-tight'>
+          <div className='grid flex-1 text-left text-sm leading-tight'>
             <span className='truncate font-medium'>{user?.username}</span>
             <span className='truncate text-xs text-muted-foreground'>{user?.email}</span>
-          </div> */}
-          <div className='grid flex-1 text-left text-sm leading-tight'>
+          </div>
+          {/* <div className='grid flex-1 text-left text-sm leading-tight'>
             <Skeleton className='h-4 w-4/5' />
             <Skeleton className='h-4 w-3/5' />
-          </div>
+          </div> */}
           <MoreVerticalIcon className='ml-auto size-4' />
         </Button>
       </DropdownMenuTrigger>
