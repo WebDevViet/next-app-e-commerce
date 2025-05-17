@@ -4,9 +4,9 @@ import { TypeError } from '@/enums/typeError'
 import Http from '@/helpers/http/http'
 import { payloadHttpError } from '@/helpers/http/interceptor/errorInterceptors'
 
-const clientToServer = new Http({ baseUrl: '/api', credentials: 'include' })
+const clientFetcher = new Http({ baseUrl: '/api', credentials: 'include' })
 
-clientToServer.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
+clientFetcher.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
   const error = payloadHttpError.safeParse(responseHttp.payload)
   if (!error.success) return
 
@@ -24,4 +24,4 @@ clientToServer.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
   }
 }, 'unshift')
 
-export default clientToServer
+export default clientFetcher

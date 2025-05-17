@@ -1,7 +1,6 @@
 'use client'
 
 // * Next React
-import { useAppContext } from '@/app/app-provider'
 import NavUserContent from '@/components/layouts/navbar/nav-user-content'
 
 // * Shadcn
@@ -11,8 +10,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 // * Components
 import { User } from 'lucide-react'
 
+// * swr
+import { useUser } from '@/lib/hooks/use-user'
+
 const NavUser = () => {
-  const { user } = useAppContext()
+  const { user } = useUser()
 
   return (
     <DropdownMenu>

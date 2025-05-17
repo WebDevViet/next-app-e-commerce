@@ -8,7 +8,8 @@ const envServerSchema = z.object({
   NEXT_DEV: z
     .string()
     .optional()
-    .transform((value) => value === 'development')
+    .transform((value) => value === 'development'),
+  NEXTJS_SERVER_KEY: z.string().regex(/^[a-f0-9]{64}$/, 'Nextjs server key format is invalid')
 })
 
 export const envServerParsed = envServerSchema.safeParse({
@@ -16,6 +17,7 @@ export const envServerParsed = envServerSchema.safeParse({
   ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS,
   PATH_LOGOUT: process.env.PATH_LOGOUT,
   API_KEY: process.env.API_KEY,
+  NEXTJS_SERVER_KEY: process.env.NEXTJS_SERVER_KEY,
   NEXT_DEV: process.env.NEXT_PUBLIC_NEXT_DEV
 })
 

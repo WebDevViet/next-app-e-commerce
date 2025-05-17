@@ -1,12 +1,14 @@
 // * Http
-import nextToServer from '@/helpers/http/nextToServer'
+import serverFetcher from '@/helpers/http/serverFetcher'
 
 // * Config
 import { API_ROUTES } from '@/constants/apiRoutes'
+import { GetMeResponse } from '@/types/response/userResponse'
 
 // * Types
 const nextAuthServices = {
-  logout: () => nextToServer.post(API_ROUTES.auth.logout)
+  logout: () => serverFetcher.post(API_ROUTES.auth.logout),
+  getMe: () => serverFetcher.get<GetMeResponse>(API_ROUTES.users.me)
 }
 
 export default nextAuthServices

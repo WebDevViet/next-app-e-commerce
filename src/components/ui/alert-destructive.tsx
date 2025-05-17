@@ -1,8 +1,12 @@
-import { AlertCircle } from 'lucide-react'
-
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { useAppContext } from '@/app/app-provider'
+// * React
 import { useEffect } from 'react'
+
+// * Shadcn
+import { AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+
+// * Store
+import useAppStore from '@/stores'
 
 interface Props {
   title?: string
@@ -11,15 +15,15 @@ interface Props {
 }
 
 export function AlertDestructive({ title, description, visible = true }: Props) {
-  const { messageError, setMessageError } = useAppContext()
+  const messageError = useAppStore.messageError.use()
 
   useEffect(() => {
     return () => {
-      setMessageError(null)
+      useAppStore.setMessageError('')
     }
-  }, [setMessageError])
+  }, [])
 
-  if (messageError === null || !visible) return null
+  if (!messageError || !visible) return null
 
   return (
     <Alert variant='destructive'>

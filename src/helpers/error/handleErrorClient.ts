@@ -1,12 +1,6 @@
 import { UseFormSetError } from 'react-hook-form'
 import { ExternalToast, toast } from 'sonner'
 
-// * Errors
-import { Dispatch, SetStateAction } from 'react'
-
-// * Actions
-import { actionLogout } from '@/server/actions/actionLogout'
-
 // * Http
 import { HttpError } from '@/helpers/http/interceptor/errorInterceptors'
 
@@ -14,14 +8,22 @@ import { HttpError } from '@/helpers/http/interceptor/errorInterceptors'
 import { TypeError } from '@/enums/typeError'
 import HttpStatus from '@/enums/httpStatus'
 
+// * Stores
+import useAppStore from '@/stores'
+
 interface ParamsHttpErrorClient {
   error: unknown
-  setMessageError?: Dispatch<SetStateAction<string | null>>
   setErrorForm?: UseFormSetError<any>
+  showAlertDestructive?: boolean
   configToast?: ExternalToast
 }
 
-const handleErrorClient = async ({ error, setMessageError, setErrorForm, configToast = {} }: ParamsHttpErrorClient) => {
+const handleErrorClient = ({
+  error,
+  setErrorForm,
+  showAlertDestructive = false,
+  configToast = {}
+}: ParamsHttpErrorClient) => {
   if (!(error instanceof HttpError))
     return toast.error('Unexpected error', {
       description:
@@ -39,7 +41,8 @@ const handleErrorClient = async ({ error, setMessageError, setErrorForm, configT
     })
 
   const showError = () => {
-    if (setMessageError) return setMessageError(error.message)
+    if (showAlertDestructive) return useAppStore.setMessageError(error.message)
+
     toast.error(error.message, { ...configToast, richColors: true })
   }
 
@@ -50,8 +53,8 @@ const handleErrorClient = async ({ error, setMessageError, setErrorForm, configT
       case TypeError.JsonWebTokenError:
       case TypeError.NotBeforeError:
       case TypeError.RefreshTokenExpiredError:
-        localStorage.removeItem('user')
-        await actionLogout()
+      case TypeError.UnauthorizedError:
+        useAppStore.setAuthStatus('loggingOut')
         break
       default:
         break

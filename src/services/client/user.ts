@@ -1,5 +1,5 @@
 // * Http
-import clientToServer from '@/helpers/http/clientToServer'
+import clientFetcher from '@/helpers/http/clientFetcher'
 
 // * Config
 import { API_ROUTES } from '@/constants/apiRoutes'
@@ -8,7 +8,7 @@ import { API_ROUTES } from '@/constants/apiRoutes'
 import { GetMeResponse } from '@/types/response/userResponse'
 
 const clientUserServices = {
-  getMe: () => clientToServer.get<GetMeResponse>(API_ROUTES.users.me)
+  getMe: () => clientFetcher.get<GetMeResponse>(API_ROUTES.users.me)
 }
 
 export default clientUserServices

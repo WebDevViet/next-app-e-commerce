@@ -1,7 +1,7 @@
 'use client'
 
 // * Components
-import { useAppContext } from '@/app/app-provider'
+import useAppStore from '@/stores'
 
 type Props = {
   forGuest?: boolean
@@ -10,15 +10,17 @@ type Props = {
 }
 
 const ProtectedView = ({ children, forGuest, forUser }: Props) => {
-  const { isAuthenticated } = useAppContext()
+  const appMounted = useAppStore.appMounted.use()
+  const authStatus = useAppStore.authStatus.use()
 
-  if (isAuthenticated === null) return null
+  if (!appMounted) return null
 
   if (!forUser && !forGuest) return children
 
-  if (forUser && isAuthenticated) return children
+  if (forUser && authStatus === 'loggedIn') return children
+  // if (forUser && ['loggedIn', 'loggingIn'].includes(authStatus)) return children
 
-  if (forGuest && !isAuthenticated) return children
+  if (forGuest && authStatus === 'idle') return children
 
   return null
 }

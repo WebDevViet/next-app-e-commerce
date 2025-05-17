@@ -38,8 +38,6 @@ export const throwHttpError: ErrorInterceptor = ({ responseHttp }) => {
     })
   }
 
-  // Refresh token
-
   throw new HttpError({ status: responseHttp.status, payload: error.data })
 }
 

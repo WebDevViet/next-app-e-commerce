@@ -42,21 +42,21 @@ export async function middleware(request: NextRequest) {
 
   const cookieStore = await cookies()
 
-  const isAuthenticated = !!cookieStore.get('refresh-token')?.value
+  const isLoggedIn = !!cookieStore.get('refresh-token')?.value
 
-  if (isAuthenticated) {
+  if (isLoggedIn) {
     cookieStore.set('logged_in', 'true', { sameSite: 'strict' })
   } else {
     cookieStore.delete('logged_in')
   }
 
   // Redirect to login if not logged in and accessing protected paths
-  if (protectedPaths.some((regex) => requestUrl.pathname.match(regex)) && !isAuthenticated) {
+  if (protectedPaths.some((regex) => requestUrl.pathname.match(regex)) && !isLoggedIn) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
   // Redirect to home if logged in and accessing auth paths
-  if (authPaths.some((path) => requestUrl.pathname.startsWith(path)) && isAuthenticated) {
+  if (authPaths.some((path) => requestUrl.pathname.startsWith(path)) && isLoggedIn) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 

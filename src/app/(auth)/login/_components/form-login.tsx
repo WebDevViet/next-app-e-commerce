@@ -1,7 +1,6 @@
 'use client'
 
 // * Next React
-import { useAppContext } from '@/app/app-provider'
 import Link from 'next/link'
 
 // * Libraries
@@ -32,6 +31,7 @@ import { cn } from '@/lib/utils'
 // * Errors
 import handleErrorClient from '@/helpers/error/handleErrorClient'
 import { envClient } from '@/configs/envClient'
+import useAppStore from '@/stores'
 
 const isNextDev = envClient.NEXT_DEV
 
@@ -44,21 +44,20 @@ export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRe
     }
   })
 
-  const { handleGetMe, setMessageError } = useAppContext()
-
   async function onSubmit(values: BodyLogin) {
     try {
       const {
         payload: { message }
       } = await clientAuthServices.login(values)
+
       toast.success(message, { richColors: true })
 
-      await handleGetMe()
+      useAppStore.setAuthStatus('loggingIn')
     } catch (error: unknown) {
       handleErrorClient({
         error,
-        setErrorForm: form.setError,
-        setMessageError
+        showAlertDestructive: true,
+        setErrorForm: form.setError
       })
     }
   }

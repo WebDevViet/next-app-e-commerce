@@ -1,7 +1,6 @@
 'use client'
 
 // * Next React
-import { useAppContext } from '@/app/app-provider'
 import Link from 'next/link'
 
 // * Libraries
@@ -32,6 +31,7 @@ import { cn } from '@/lib/utils'
 // import { HttpError401 } from '@/cores/http/interceptor/errorInterceptors'
 import { AlertDestructive } from '@/components/ui/alert-destructive'
 import handleErrorClient from '@/helpers/error/handleErrorClient'
+import useAppStore from '@/stores'
 
 export function FormRegister({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const form = useForm<BodyRegister>({
@@ -42,21 +42,20 @@ export function FormRegister({ className, ...props }: React.ComponentPropsWithou
     }
   })
 
-  const { handleGetMe, setMessageError } = useAppContext()
-
   async function onSubmit(values: BodyRegister) {
     try {
       const {
         payload: { message }
       } = await clientAuthServices.register(values)
+
       toast.success(message, { richColors: true })
 
-      await handleGetMe()
+      useAppStore.setAuthStatus('loggingIn')
     } catch (error) {
       handleErrorClient({
         error,
-        setErrorForm: form.setError,
-        setMessageError
+        showAlertDestructive: true,
+        setErrorForm: form.setError
       })
     }
   }

@@ -1,5 +1,5 @@
 // * Http
-import clientToServer from '@/helpers/http/clientToServer'
+import clientFetcher from '@/helpers/http/clientFetcher'
 
 // * Config
 import { API_ROUTES } from '@/constants/apiRoutes'
@@ -8,8 +8,8 @@ import { API_ROUTES } from '@/constants/apiRoutes'
 import type { BodyLogin, BodyRegister } from '@/schemas/schemaValidations/authenSchema'
 
 const clientAuthServices = {
-  login: (body: BodyLogin) => clientToServer.post(API_ROUTES.auth.login, { body }),
-  register: (body: BodyRegister) => clientToServer.post(API_ROUTES.auth.register, { body })
+  login: (body: BodyLogin) => clientFetcher.post(API_ROUTES.auth.login, { body }),
+  register: (body: BodyRegister) => clientFetcher.post(API_ROUTES.auth.register, { body })
 }
 
 export default clientAuthServices

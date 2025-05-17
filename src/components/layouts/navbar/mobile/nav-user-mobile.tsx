@@ -1,9 +1,5 @@
 'use client'
 
-// * Next React
-import { useAppContext } from '@/app/app-provider'
-import NavUserContent from '@/components/layouts/navbar/nav-user-content'
-
 // * Shadcn
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -11,9 +7,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 import { MoreVerticalIcon, User } from 'lucide-react'
 
 // * Components
+import NavUserContent from '@/components/layouts/navbar/nav-user-content'
+
+// * swr
+import { useUser } from '@/lib/hooks/use-user'
 
 const NavUserMobile = () => {
-  const { user } = useAppContext()
+  const { user } = useUser()
 
   return (
     <DropdownMenu>

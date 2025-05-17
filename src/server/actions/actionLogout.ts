@@ -9,10 +9,8 @@ import nextAuthServices from '@/services/next/auth'
 
 export async function actionLogout() {
   const cookieStore = await cookies()
-
   try {
-    const result = await nextAuthServices.logout()
-    return result
+    await nextAuthServices.logout()
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log('🚀 ~ actionLogout ~ e:', e)

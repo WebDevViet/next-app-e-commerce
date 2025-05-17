@@ -1,8 +1,5 @@
 'use client'
 
-// * Next React
-import { useAppContext } from '@/app/app-provider'
-
 // * Shadcn
 import {
   DropdownMenuGroup,
@@ -19,8 +16,14 @@ import {
 // * Components
 import { LogOut } from 'lucide-react'
 
+// * swr
+import { useUser } from '@/lib/hooks/use-user'
+
+// * Store
+import useAppStore from '@/stores'
+
 const NavUserContent = () => {
-  const { user, handleLogout } = useAppContext()
+  const { user } = useUser()
 
   return (
     <>
@@ -76,7 +79,7 @@ const NavUserContent = () => {
 
       <DropdownMenuSeparator />
 
-      <DropdownMenuItem onClick={async () => await handleLogout()}>
+      <DropdownMenuItem onClick={() => useAppStore.setAuthStatus('loggingOut')}>
         <LogOut />
         Log out
       </DropdownMenuItem>

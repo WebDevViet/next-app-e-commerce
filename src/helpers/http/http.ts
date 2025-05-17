@@ -3,6 +3,7 @@ import { initInterceptors } from '@/helpers/http/interceptor'
 
 // * Types
 import { ErrorInterceptor, Interceptors, RequestInterceptor, ResponseInterceptor } from '@/types/interceptor'
+import { AuthTokenResponse } from '@/types/response/authResponse'
 import { ResponseSuccess } from '@/types/response/response'
 
 type MethodHttpInterceptor<T> = (options: T, method?: 'push' | 'unshift') => void
@@ -25,7 +26,7 @@ class Http {
   private interceptors: Interceptors = initInterceptors
   private baseUrl: string
   private requestBase: Pick<RequestInit, 'credentials'>
-  refreshingToken: Promise<ResponseSuccess<null>> | null = null
+  refreshingToken: ReturnType<typeof this.post<AuthTokenResponse>> | null = null
 
   constructor({ baseUrl, credentials }: ConstructorHttp) {
     this.baseUrl = baseUrl ? baseUrl.replace(/\/+$/, '') : ''
