@@ -1,4 +1,5 @@
 // * Interceptors
+import { TypeError } from '@/enums/typeError'
 import { initInterceptors } from '@/helpers/http/interceptor'
 
 // * Types
@@ -28,7 +29,7 @@ class Http {
   private requestBase: Pick<RequestInit, 'credentials'>
   refreshingToken: ReturnType<typeof this.post<AuthTokenResponse>> | null = null
 
-  constructor({ baseUrl, credentials }: ConstructorHttp) {
+  constructor({ baseUrl, credentials = 'include' }: ConstructorHttp) {
     this.baseUrl = baseUrl ? baseUrl.replace(/\/+$/, '') : ''
     this.requestBase = { credentials }
   }
@@ -75,19 +76,35 @@ class Http {
       )
 
       const fullUrl = `${this.baseUrl}${url}`
+      let payload
+      let response
 
-      const response = await fetch(fullUrl, fetchInit)
+      try {
+        response = await fetch(fullUrl, fetchInit)
+        payload = await response.json()
+      } catch (e) {
+        payload = {
+          data: null,
+          errors: null,
+          message: response?.statusText ?? (e as Error)?.message ?? 'Unexpected error',
+          typeError: TypeError.InternalServerErrorError
+        }
+      }
 
       let responseHttp = {
-        status: response.status,
-        payload: await response.json(),
-        response
+        status: response?.status ?? 500,
+        payload
       }
 
       // Error Interceptors
-      if (!response.ok) {
+      if (!response?.ok) {
         for (const interceptor of this.interceptors.error) {
-          const interceptorError = interceptor({ responseHttp, fetchInit, http: this })
+          const interceptorError = interceptor<T>({
+            responseHttp,
+            fetchInit,
+            http: this
+          })
+
           if (!(interceptorError instanceof Promise)) continue
 
           const result = await interceptorError
@@ -107,7 +124,7 @@ class Http {
         })
       )
 
-      return responseHttp
+      return responseHttp as ResponseSuccess<T>
     }
 
   async retry<T = null>(fetchInit: FetchInit): Promise<ResponseSuccess<T>> {

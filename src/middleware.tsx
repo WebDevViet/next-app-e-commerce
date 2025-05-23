@@ -10,7 +10,7 @@ import { authPaths, protectedPaths } from '@/configs/path'
 import { envServer } from '@/configs/envServer'
 import { corsOptions } from '@/constants/corsConstants'
 
-// * H
+// * Helpers
 import { isValidOrigin } from '@/helpers/helpersMiddleware'
 
 export async function middleware(request: NextRequest) {
@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
 
   const cookieStore = await cookies()
 
-  const isLoggedIn = !!cookieStore.get('refresh-token')?.value
+  const isLoggedIn = !!cookieStore.get('refresh_token')?.value
 
   if (isLoggedIn) {
     cookieStore.set('logged_in', 'true', { sameSite: 'strict' })
@@ -78,5 +78,5 @@ export async function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/', '/me', '/login', '/api/:path*', '/register', '/products/:path*']
+  matcher: ['/', '/me', '/login', '/profile', '/api/:path*', '/register', '/products/:path*']
 }

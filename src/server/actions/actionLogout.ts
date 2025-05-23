@@ -6,18 +6,29 @@ import { redirect } from 'next/navigation'
 
 // * Services
 import nextAuthServices from '@/services/next/auth'
+import { protectedPaths } from '@/configs/path'
+import handleErrorServer from '@/helpers/error/handleErrorServer'
 
-export async function actionLogout() {
+export async function actionLogout(pathname?: string, redirectPath?: string) {
   const cookieStore = await cookies()
+
+  const authorization = cookieStore.get('Authorization')
+  const refreshToken = cookieStore.get('refresh_token')
+
+  const isRedirectLoginPage = protectedPaths.some((path) => pathname?.match(path))
+
   try {
-    await nextAuthServices.logout()
+    if (authorization?.value || refreshToken?.value) {
+      await nextAuthServices.logout()
+    }
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('🚀 ~ actionLogout ~ e:', e)
+    handleErrorServer(e)
   } finally {
     cookieStore.delete('Authorization')
-    cookieStore.delete('refresh-token')
+    cookieStore.delete('refresh_token')
+    cookieStore.delete('logged_in')
 
-    redirect('/login')
+    if (isRedirectLoginPage) redirect('/login')
+    if (redirectPath) redirect(redirectPath)
   }
 }

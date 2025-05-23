@@ -3,7 +3,6 @@ import { type TypeError } from '@/enums/typeError'
 export interface ResponseHttp<T> {
   status: number
   payload: T
-  response: Response
 }
 
 export type PayloadSuccess<T = null> = {

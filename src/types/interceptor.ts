@@ -17,7 +17,7 @@ export type ResponseInterceptor = <T = null>({
   http: Http
 }) => Promise<ResponseSuccess<T> | void> | void
 
-export type ErrorInterceptor = <T = null>({
+export type ErrorInterceptor = <T>({
   responseHttp,
   fetchInit,
   http

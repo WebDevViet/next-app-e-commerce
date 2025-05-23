@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 // * Shadcn
 import {
@@ -32,9 +33,11 @@ const NavUserContent = () => {
       <DropdownMenuSeparator />
 
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-          Profile
-          <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+        <DropdownMenuItem asChild>
+          <Link href='/profile'>
+            Profile
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
           Billing

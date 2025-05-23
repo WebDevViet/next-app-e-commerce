@@ -17,7 +17,7 @@ import { TypeError } from '@/enums/typeError'
 import { cookieSchema } from '@/schemas/cookieSchema'
 
 // * Interceptors
-import { payloadHttpError } from '@/helpers/http/interceptor/errorInterceptors'
+import { HttpError, payloadHttpError } from '@/helpers/http/interceptor/errorInterceptors'
 
 // * Utils
 import { envServer } from '@/configs/envServer'
@@ -28,7 +28,8 @@ const serverFetcher = new Http({ baseUrl: envServer.API_SERVER + '/api', credent
 serverFetcher.requestInterceptor(async ({ fetchInit }) => {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('Authorization')?.value
-  const refreshToken = cookieStore.get('refresh-token')?.value
+  const refreshToken = cookieStore.get('refresh_token')?.value
+  const loggedIn = cookieStore.get('logged_in')?.value
 
   const headers = new Headers(fetchInit.headers)
 
@@ -36,8 +37,12 @@ serverFetcher.requestInterceptor(async ({ fetchInit }) => {
     headers.append('Cookie', `Authorization=${accessToken}`)
   }
   if (refreshToken) {
-    headers.append('Cookie', `refresh-token=${refreshToken}`)
+    headers.append('Cookie', `refresh_token=${refreshToken}`)
   }
+  if (loggedIn) {
+    headers.append('Cookie', `logged_in=${loggedIn}`)
+  }
+
   headers.set('x-api-key', envServer.API_KEY)
 
   fetchInit.headers = headers
@@ -46,10 +51,20 @@ serverFetcher.requestInterceptor(async ({ fetchInit }) => {
 })
 
 serverFetcher.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
-  const errorParse = payloadHttpError.safeParse(responseHttp.payload)
-  if (!errorParse.success) return
+  const { success, data } = payloadHttpError.safeParse(responseHttp)
+  if (!success) {
+    throw new HttpError({
+      status: responseHttp.status,
+      payload: {
+        errors: null,
+        data: null,
+        message: responseHttp.payload?.message ?? 'Unexpected error',
+        typeError: TypeError.UnexpectedError
+      }
+    })
+  }
 
-  if (errorParse.data.typeError === TypeError.AccessTokenExpiredError) {
+  if (data.payload.typeError === TypeError.AccessTokenExpiredError) {
     http.refreshingToken ??= (async () =>
       await http.post(API_ROUTES.auth.refreshToken, { body: { serverKey: envServer.NEXTJS_SERVER_KEY } }))()
 
@@ -75,10 +90,10 @@ serverFetcher.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
 
       cookieStore.set({ name: 'Authorization', ...accessToken, value: `Bearer ${accessToken.value}` })
 
-      cookieStore.set({ name: 'refresh-token', ...refreshToken })
+      cookieStore.set({ name: 'refresh_token', ...refreshToken })
 
       return await http.retry(fetchInit)
-    } catch (error: unknown) {
+    } catch (error) {
       throw error
     } finally {
       http.refreshingToken = null

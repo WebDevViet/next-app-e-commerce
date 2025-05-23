@@ -40,7 +40,9 @@ export const useAuthentication = () => {
     if (authStatus === 'loggingOut') {
       ;(async () => {
         useAppStore.setAuthStatus('idle')
-        await actionLogout()
+        const redirectPath = useAppStore.redirectPath.get()
+        useAppStore.setRedirectPath('')
+        await actionLogout(pathname, redirectPath)
       })()
     }
   }, [authStatus, pathname, router, user])

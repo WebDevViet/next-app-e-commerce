@@ -6,13 +6,14 @@ const useAppStore = store(
   {
     messageError: '',
     appMounted: false,
-    authStatus: 'idle' as 'idle' | 'loggingIn' | 'loggedIn' | 'loggingOut'
+    authStatus: 'idle' as 'idle' | 'loggingIn' | 'loggedIn' | 'loggingOut',
+    redirectPath: ''
   },
   {
     middlewares: [],
     name: 'app-store',
     devtools: {
-      enabled: envClient.NEXT_DEV,
+      enabled: envClient.NEXT_ENV === 'development',
       serialize: true
     },
     persist: {
@@ -28,7 +29,8 @@ const useAppStore = store(
   .actions((store) => ({
     setMessageError: (messageError: string) => store.messageError.set(messageError),
     setAppMounted: (appMounted: boolean) => store.appMounted.set(appMounted),
-    setAuthStatus: (authStatus: 'idle' | 'loggingIn' | 'loggedIn' | 'loggingOut') => store.authStatus.set(authStatus)
+    setAuthStatus: (authStatus: 'idle' | 'loggingIn' | 'loggedIn' | 'loggingOut') => store.authStatus.set(authStatus),
+    setRedirectPath: (redirectPath: string) => store.redirectPath.set(redirectPath)
   }))
 
 export default useAppStore

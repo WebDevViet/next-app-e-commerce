@@ -33,7 +33,7 @@ import handleErrorClient from '@/helpers/error/handleErrorClient'
 import { envClient } from '@/configs/envClient'
 import useAppStore from '@/stores'
 
-const isNextDev = envClient.NEXT_DEV
+const isNextDev = envClient.NEXT_ENV === 'development'
 
 export function FormLogin({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const form = useForm<BodyLogin>({

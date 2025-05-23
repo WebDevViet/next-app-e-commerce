@@ -9,10 +9,13 @@ import { ErrorInterceptor } from '@/types/interceptor'
 // import { builderError, builderErrors } from '@/helpers/error/builderError'
 
 export const payloadHttpError = z.object({
-  data: z.null(),
-  message: z.string(),
-  errors: z.record(z.string()).nullable(),
-  typeError: z.nativeEnum(TypeError)
+  status: z.number(),
+  payload: z.object({
+    data: z.null(),
+    message: z.string(),
+    errors: z.record(z.string()).nullable(),
+    typeError: z.nativeEnum(TypeError)
+  })
 })
 
 export class HttpError extends Error {
@@ -20,7 +23,7 @@ export class HttpError extends Error {
   errors: Record<string, string> | null
   typeError: TypeError
 
-  constructor({ status, payload }: { status: number; payload: z.infer<typeof payloadHttpError> }) {
+  constructor({ payload, status }: z.infer<typeof payloadHttpError>) {
     super(payload.message)
     this.status = status
     this.errors = payload.errors
@@ -29,20 +32,14 @@ export class HttpError extends Error {
 }
 
 export const throwHttpError: ErrorInterceptor = ({ responseHttp }) => {
-  const error = payloadHttpError.safeParse(responseHttp.payload)
+  const error = payloadHttpError.safeParse(responseHttp)
 
   if (!error.success) {
     throw new HttpError({
       status: responseHttp.status,
-      payload: { errors: null, message: 'Unexpected error', typeError: TypeError.UnexpectedError, data: null }
+      payload: { errors: null, data: null, message: 'Unexpected error', typeError: TypeError.UnexpectedError }
     })
   }
 
-  throw new HttpError({ status: responseHttp.status, payload: error.data })
+  throw new HttpError(error.data)
 }
-
-// 401 Unauthorized
-// export const [HttpError401] = builderError(401)
-
-// 422 Unprocessable Entity
-// export const [HttpError422, throwError422] = builderErrors(422)

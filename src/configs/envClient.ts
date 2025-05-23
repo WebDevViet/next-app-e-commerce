@@ -2,10 +2,7 @@ import ms from 'ms'
 import z from 'zod'
 
 const envClientSchema = z.object({
-  NEXT_DEV: z
-    .string()
-    .optional()
-    .transform((value) => value === 'development'),
+  NEXT_ENV: z.string().optional(),
   ACCESS_TOKEN_EXPIRES_IN: z.string().transform((value) => {
     const parsedValue = ms(value as ms.StringValue)
     if (parsedValue === undefined) {
@@ -16,7 +13,7 @@ const envClientSchema = z.object({
 })
 
 export const envClientParsed = envClientSchema.safeParse({
-  NEXT_DEV: process.env.NEXT_PUBLIC_NEXT_DEV,
+  NEXT_ENV: process.env.NEXT_PUBLIC_NEXT_ENV,
   ACCESS_TOKEN_EXPIRES_IN: process.env.NEXT_PUBLIC_ACCESS_TOKEN_EXPIRES_IN
 })
 

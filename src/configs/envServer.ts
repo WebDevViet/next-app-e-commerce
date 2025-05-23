@@ -5,10 +5,7 @@ const envServerSchema = z.object({
   ALLOWED_ORIGINS: z.string().regex(/^\[.*\]$/, 'Allowed origins format is invalid'),
   PATH_LOGOUT: z.string().regex(/^\/logout\/[a-f0-9]{64}$/, 'Path logout format is invalid'),
   API_KEY: z.string(),
-  NEXT_DEV: z
-    .string()
-    .optional()
-    .transform((value) => value === 'development'),
+  NEXT_ENV: z.string().optional(),
   NEXTJS_SERVER_KEY: z.string().regex(/^[a-f0-9]{64}$/, 'Nextjs server key format is invalid')
 })
 
@@ -18,7 +15,7 @@ export const envServerParsed = envServerSchema.safeParse({
   PATH_LOGOUT: process.env.PATH_LOGOUT,
   API_KEY: process.env.API_KEY,
   NEXTJS_SERVER_KEY: process.env.NEXTJS_SERVER_KEY,
-  NEXT_DEV: process.env.NEXT_PUBLIC_NEXT_DEV
+  NEXT_ENV: process.env.NEXT_PUBLIC_NEXT_ENV
 })
 
 if (envServerParsed.error) {
