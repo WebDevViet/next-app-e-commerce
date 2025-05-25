@@ -95,6 +95,8 @@ class Http {
         status: response?.status ?? 500,
         payload
       }
+      // eslint-disable-next-line no-console
+      console.log('🚀 ~ Http ~ responseHttp:', responseHttp)
 
       // Error Interceptors
       if (!response?.ok) {

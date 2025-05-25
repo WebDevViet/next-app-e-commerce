@@ -33,6 +33,8 @@ const handleErrorClient = ({
       error = new HttpError(errorParse.data)
     }
   }
+  // eslint-disable-next-line no-console
+  console.log('🚀 ~ error:', error)
 
   if (!(error instanceof HttpError)) {
     return showError(void 0, 'error', configToastUnexpectedError(configToast))
