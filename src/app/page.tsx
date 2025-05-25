@@ -6,8 +6,6 @@ import handleErrorClient from '@/helpers/error/handleErrorClient'
 import { actionTest } from '@/server/actions/actionTest'
 import clientUserServices from '@/services/client/user'
 import { useState, useTransition } from 'react'
-import { toast } from 'sonner'
-// import { useFormStatus } from 'react-dom'
 
 export default function Home() {
   const [loading, setLoading] = useState(false)
@@ -24,19 +22,6 @@ export default function Home() {
       setLoading(false)
     }
   }
-
-  // const getMeServer = async () => {
-  //   try {
-  //     const { payload, status } = await actionTest()
-  //     if (payload.typeError) {
-  //       throw { payload, status }
-  //     }
-  //     // eslint-disable-next-line no-console
-  //     console.log('🚀 ~ handleGetMe ~ data:', payload)
-  //   } catch (error) {
-  //     handleErrorClient({ error, isServerAction: true })
-  //   }
-  // }
 
   const getMeServer = async () => {
     startTransition(async () => {
@@ -60,33 +45,9 @@ export default function Home() {
         Get Me on Client
       </Button>
       <Separator className='my-4' />
-      {/* <form action={getMeServer}>
-        <BtnGetMeOnServer />
-      </form> */}
       <Button disabled={isPending} onClick={getMeServer}>
         Get Me on Server
-      </Button>
-      <Separator className='my-4' />
-      <Button
-        onClick={() =>
-          toast.error('lorem ipsum dolor', {
-            description: 'lorem ipsum dolor sit amet consectetur adipiscing elit.',
-            richColors: true,
-            action: {
-              label: 'Contact',
-              onClick: () => {}
-            }
-          })
-        }
-      >
-        show toast
       </Button>
     </main>
   )
 }
-
-// function BtnGetMeOnServer() {
-//   // ✅ `pending` will be derived from the form that wraps the Submit component
-//   const { pending } = useFormStatus()
-//   return <Button disabled={pending}>Get Me on Server</Button>
-// }
