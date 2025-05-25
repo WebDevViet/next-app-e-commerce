@@ -1,1 +1,7 @@
-- Lỗi nếu server ko on thì nên báo toast chứ ko phải alert ở login
+- Dev
+
+  - login with google
+
+- Production
+  - Xoá toast console.log
+  - Xoá auto fill form login

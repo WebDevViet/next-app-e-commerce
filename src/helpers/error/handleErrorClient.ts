@@ -48,10 +48,6 @@ const handleErrorClient = ({
     return showError()
   }
 
-  if (error.typeError === TypeError.UnexpectedError) {
-    return toastUnexpectedError()
-  }
-
   let typeToast: 'warning' | 'error' = 'error'
   let isLoggingOut = false
 
@@ -80,7 +76,7 @@ const handleErrorClient = ({
     }
   }
 
-  if (error.status === HttpStatus.INTERNAL_SERVER_ERROR) {
+  if (error.status >= HttpStatus.INTERNAL_SERVER_ERROR || error.typeError === TypeError.UnexpectedError) {
     toastUnexpectedError(error.message)
   }
 
