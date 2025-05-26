@@ -81,6 +81,8 @@ class Http {
 
       try {
         response = await fetch(fullUrl, fetchInit)
+        // eslint-disable-next-line no-console
+        console.log('🚀 ~ Http ~ response:', response)
         payload = await response.json()
       } catch {
         payload = {
