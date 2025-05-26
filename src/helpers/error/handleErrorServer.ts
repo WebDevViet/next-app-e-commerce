@@ -16,16 +16,6 @@ const handleErrorServer = (error: unknown) => {
   let errorResponse: ResponseError
 
   switch (true) {
-    case error instanceof HttpError && error.typeError === TypeError.InternalServerErrorError:
-      // TODO: write error message to sentry
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ handleErrorServer ~ error:', error.message)
-
-      errorResponse = {
-        status: error.status,
-        payload: { errors: error.errors, data: null, message: 'Internal Server Error', typeError: error.typeError }
-      }
-      break
     case error instanceof HttpError:
       errorResponse = {
         status: error.status,

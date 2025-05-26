@@ -86,17 +86,15 @@ class Http {
         payload = {
           data: null,
           errors: null,
-          message: response?.statusText ?? (e as Error)?.message ?? 'Unexpected error',
+          message: response?.statusText || (e as Error)?.message || 'Unexpected error',
           typeError: TypeError.InternalServerErrorError
         }
       }
 
       let responseHttp = {
-        status: response?.status ?? 500,
+        status: response?.status || 500,
         payload
       }
-      // eslint-disable-next-line no-console
-      console.log('🚀 ~ Http ~ responseHttp:', responseHttp)
 
       // Error Interceptors
       if (!response?.ok) {
