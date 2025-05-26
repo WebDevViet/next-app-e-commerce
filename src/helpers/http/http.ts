@@ -89,6 +89,8 @@ class Http {
           message: response?.statusText || 'System error',
           typeError: TypeError.InternalServerErrorError
         }
+        // eslint-disable-next-line no-console
+        console.log('🚀 ~ Http ~ payload.response?.statusText:', response?.statusText)
       }
 
       let responseHttp = {
