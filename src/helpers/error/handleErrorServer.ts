@@ -38,7 +38,7 @@ const handleErrorServer = (error: unknown) => {
     default:
       errorResponse = {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
-        payload: { errors: null, data: null, message: 'Unexpected error', typeError: TypeError.UnexpectedError }
+        payload: { errors: null, data: null, message: 'System error', typeError: TypeError.UnexpectedError }
       }
       break
   }

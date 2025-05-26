@@ -58,7 +58,7 @@ serverFetcher.errorInterceptor(async ({ responseHttp, fetchInit, http }) => {
       payload: {
         errors: null,
         data: null,
-        message: responseHttp.payload?.message || 'Unexpected error',
+        message: responseHttp.payload?.message || 'System error',
         typeError: TypeError.UnexpectedError
       }
     })

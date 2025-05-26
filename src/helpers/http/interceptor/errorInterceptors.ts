@@ -37,7 +37,7 @@ export const throwHttpError: ErrorInterceptor = ({ responseHttp }) => {
   if (!error.success) {
     throw new HttpError({
       status: responseHttp.status,
-      payload: { errors: null, data: null, message: 'Unexpected error', typeError: TypeError.UnexpectedError }
+      payload: { errors: null, data: null, message: 'System error', typeError: TypeError.UnexpectedError }
     })
   }
 

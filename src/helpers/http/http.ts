@@ -82,11 +82,11 @@ class Http {
       try {
         response = await fetch(fullUrl, fetchInit)
         payload = await response.json()
-      } catch (e) {
+      } catch {
         payload = {
           data: null,
           errors: null,
-          message: response?.statusText || (e as Error)?.message || 'Unexpected error',
+          message: response?.statusText || 'System error',
           typeError: TypeError.InternalServerErrorError
         }
       }

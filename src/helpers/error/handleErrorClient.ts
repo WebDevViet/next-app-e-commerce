@@ -81,7 +81,7 @@ const handleErrorClient = ({
   showError(error?.message, typeToast, configToast)
 
   function showError(
-    message: string = 'Unexpected error',
+    message: string = 'System error',
     typeToast: 'warning' | 'error' = 'error',
     configToast: ExternalToast = {}
   ) {
