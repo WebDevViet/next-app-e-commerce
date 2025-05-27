@@ -92,7 +92,7 @@ class Http {
           typeError: TypeError.InternalServerErrorError
         }
         // eslint-disable-next-line no-console
-        console.log('🚀 ~ Http ~ payload.response?.statusText:', response?.statusText)
+        console.log('🚀 ~ Http ~ response:', response)
       }
 
       let responseHttp = {
