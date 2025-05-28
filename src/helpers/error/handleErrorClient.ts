@@ -33,11 +33,9 @@ const handleErrorClient = ({
       error = new HttpError(errorParse.data)
     }
   }
-  // eslint-disable-next-line no-console
-  console.log('🚀 ~ error:', error)
 
   if (!(error instanceof HttpError)) {
-    return showError(void 0, 'error', configToastUnexpectedError(configToast))
+    return showError(void 0, 'error', configToastContactAdmin(configToast))
   }
 
   let typeToast: 'warning' | 'error' = 'error'
@@ -75,13 +73,13 @@ const handleErrorClient = ({
     error.typeError === TypeError.UnexpectedError ||
     error.typeError === TypeError.ValidationError
   ) {
-    configToast = configToastUnexpectedError(configToast)
+    configToast = configToastContactAdmin(configToast)
   }
 
   showError(error?.message, typeToast, configToast)
 
   function showError(
-    message: string = 'System error',
+    message: string = 'System Error',
     typeToast: 'warning' | 'error' = 'error',
     configToast: ExternalToast = {}
   ) {
@@ -93,7 +91,7 @@ const handleErrorClient = ({
 
 export default handleErrorClient
 
-function configToastUnexpectedError(configToast: ExternalToast) {
+function configToastContactAdmin(configToast: ExternalToast) {
   return {
     ...configToast,
     description: 'Please try again later. If the problem persists, please contact the administrator.',

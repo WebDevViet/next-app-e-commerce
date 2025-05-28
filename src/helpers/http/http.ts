@@ -6,6 +6,8 @@ import { initInterceptors } from '@/helpers/http/interceptor'
 import { ErrorInterceptor, Interceptors, RequestInterceptor, ResponseInterceptor } from '@/types/interceptor'
 import { AuthTokenResponse } from '@/types/response/authResponse'
 import { ResponseSuccess } from '@/types/response/response'
+import { httpErrorStatus } from '@/enums/httpErrorStatus'
+import { capitalCase } from 'change-case'
 
 type MethodHttpInterceptor<T> = (options: T, method?: 'push' | 'unshift') => void
 
@@ -81,18 +83,14 @@ class Http {
 
       try {
         response = await fetch(fullUrl, fetchInit)
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ Http ~ response:', response)
         payload = await response.json()
       } catch {
         payload = {
           data: null,
           errors: null,
-          message: response?.statusText || 'System error',
-          typeError: TypeError.InternalServerErrorError
+          message: this.getErrorMessage(response),
+          typeError: this.getTypeError(response)
         }
-        // eslint-disable-next-line no-console
-        console.log('🚀 ~ Http ~ response:', response)
       }
 
       let responseHttp = {
@@ -142,6 +140,24 @@ class Http {
   post = this.request('POST')
 
   put = this.request('PUT')
+
+  private getErrorMessage(response: Response | void): string {
+    if (!response) return 'System Error'
+
+    if (response.statusText) return response.statusText
+
+    const errorKey = response.status as keyof typeof httpErrorStatus
+    const errorMessage = httpErrorStatus[errorKey] || 'System Error'
+    return capitalCase(errorMessage)
+  }
+
+  private getTypeError(response: Response | void): TypeError {
+    if (!response) return TypeError.UnexpectedError
+
+    const errorKey = response.status as keyof typeof httpErrorStatus
+    const typeError = httpErrorStatus[errorKey] ? httpErrorStatus[errorKey] + 'Error' : 'UnexpectedError'
+    return TypeError[typeError as keyof typeof TypeError]
+  }
 }
 
 export default Http

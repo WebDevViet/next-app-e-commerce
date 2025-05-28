@@ -27,7 +27,7 @@ export default function Home() {
     startTransition(async () => {
       try {
         const { payload, status } = await actionTest()
-        if (payload.typeError) {
+        if (payload.typeError !== null) {
           throw { payload, status }
         }
         // eslint-disable-next-line no-console
